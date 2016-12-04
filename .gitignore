@@ -5,3 +5,7 @@ bower_components
 .DS_STORE
 build/reports
 build
+
+scripts/app-bundle.js
+scripts/app-bundle.js.map
+scripts/vendor-bundle.js
