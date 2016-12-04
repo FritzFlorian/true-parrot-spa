@@ -16,5 +16,7 @@ export class HeaderMenu {
   attached() {
     this.currentUser = this.service.currentUser;
     this.loggedIn = this.service.isAuthenticated();
+
+    runJquery();
   }
 }

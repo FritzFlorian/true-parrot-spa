@@ -19,7 +19,10 @@
     <script src="scripts/vendor-bundle.js" data-main="aurelia-bootstrapper"></script>
 
     <script>
-      $(document).ready(function () {
+      // Hack to run existing jquery code.
+      // Could replace this with custom elements later on.
+      var runJquery = function () {
+        console.log($('.ui.dropdown'));
         $('.ui.dropdown').dropdown({ on: 'hover' });
         $('.message .close')
           .on('click', function() {
@@ -53,7 +56,7 @@
             offset: 64,
           })
         ;
-      });
+      };
     </script>
   </body>
 </html>

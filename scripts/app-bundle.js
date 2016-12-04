@@ -126,6 +126,7 @@ define('viewmodels/headerMenu/headerMenu',["require", "exports", "aurelia-framew
         HeaderMenu.prototype.attached = function () {
             this.currentUser = this.service.currentUser;
             this.loggedIn = this.service.isAuthenticated();
+            runJquery();
         };
         HeaderMenu = __decorate([
             aurelia_framework_1.autoinject(), 
