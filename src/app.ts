@@ -13,7 +13,8 @@ export class App {
 
   configureRouter(config, router:Router) {
     config.map([
-      { route: '', name: 'header', moduleId: 'viewmodels/headeMenu/headerMenu', nav: true, title: 'Header' },
+      { route: '', name: 'landing', moduleId: 'viewmodels/landing/landing', nav: true, title: 'Welcome' },
+      { route: 'other', name: 'other', moduleId: 'viewmodels/headerMenu/headerMenu', nav: true, title: 'Other' },
     ]);
 
     this.router = router;

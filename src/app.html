@@ -1,10 +1,6 @@
 <template>
   <compose view-model="./viewmodels/headerMenu/headerMenu"></compose>
   <section class="ui container" id="main-content">
-    {{> flashMessage }}
-
-    <h1>Testing</h1>
-
-    {{{content}}}
+    <router-view></router-view>
   </section>
 </template>
