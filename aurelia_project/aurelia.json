@@ -114,6 +114,17 @@
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
+          "blueimp-md5",
+          {
+            "name": "querystring",
+            "path": "../node_modules/querystring",
+            "main": "index"
+          },
+          {
+            "name": "gravatar",
+            "path": "../node_modules/gravatar/lib",
+            "main": "gravatar"
+          },
           {
             "name": "text",
             "path": "../scripts/text"

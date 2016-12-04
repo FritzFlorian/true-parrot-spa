@@ -1,7 +1,36 @@
-define('services/twitterCloneService',["require", "exports"], function (require, exports) {
+define('services/User',["require", "exports", "gravatar"], function (require, exports, gravatar) {
+    "use strict";
+    var User = (function () {
+        function User(firstName, lastName, email, scope) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.scope = scope;
+        }
+        User.prototype.fullName = function () {
+            return this.firstName + " " + this.lastName;
+        };
+        User.prototype.isAdmin = function () {
+            for (var _i = 0, _a = this.scope; _i < _a.length; _i++) {
+                var role = _a[_i];
+                if (role == "admin")
+                    return true;
+            }
+            return false;
+        };
+        User.prototype.gravatar = function () {
+            return gravatar.url(this.email);
+        };
+        return User;
+    }());
+    exports.User = User;
+});
+
+define('services/twitterCloneService',["require", "exports", "./User"], function (require, exports, User_1) {
     "use strict";
     var TwitterCloneService = (function () {
         function TwitterCloneService() {
+            this.currentUser = new User_1.User("Test", "User", "test@test.com", []);
         }
         TwitterCloneService.prototype.isAuthenticated = function () {
             return true;
@@ -95,6 +124,7 @@ define('viewmodels/headerMenu/headerMenu',["require", "exports", "aurelia-framew
             this.service = service;
         }
         HeaderMenu.prototype.attached = function () {
+            this.currentUser = this.service.currentUser;
             this.loggedIn = this.service.isAuthenticated();
         };
         HeaderMenu = __decorate([
@@ -106,6 +136,156 @@ define('viewmodels/headerMenu/headerMenu',["require", "exports", "aurelia-framew
     exports.HeaderMenu = HeaderMenu;
 });
 
+define('querystring/decode',['require','exports','module'],function (require, exports, module) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+'use strict';
+
+// If obj.hasOwnProperty has been overridden, then calling
+// obj.hasOwnProperty(prop) will break.
+// See: https://github.com/joyent/node/issues/1707
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+module.exports = function(qs, sep, eq, options) {
+  sep = sep || '&';
+  eq = eq || '=';
+  var obj = {};
+
+  if (typeof qs !== 'string' || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options && typeof options.maxKeys === 'number') {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys <= 0 means that we should not limit keys count
+  if (maxKeys > 0 && len > maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i < len; ++i) {
+    var x = qs[i].replace(regexp, '%20'),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx >= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = '';
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (Array.isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+};
+
+});
+
+define('querystring/encode',['require','exports','module'],function (require, exports, module) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+'use strict';
+
+var stringifyPrimitive = function(v) {
+  switch (typeof v) {
+    case 'string':
+      return v;
+
+    case 'boolean':
+      return v ? 'true' : 'false';
+
+    case 'number':
+      return isFinite(v) ? v : '';
+
+    default:
+      return '';
+  }
+};
+
+module.exports = function(obj, sep, eq, name) {
+  sep = sep || '&';
+  eq = eq || '=';
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === 'object') {
+    return Object.keys(obj).map(function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (Array.isArray(obj[k])) {
+        return obj[k].map(function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return '';
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+};
+
+});
+
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\n  <compose view-model=\"./viewmodels/headerMenu/headerMenu\"></compose>\n  <section class=\"ui container\" id=\"main-content\">\n    {{> flashMessage }}\n\n    <h1>Testing</h1>\n\n    {{{content}}}\n  </section>\n</template>\n"; });
-define('text!viewmodels/headerMenu/headerMenu.html', ['module'], function(module) { module.exports = "<template>\n  <h1>Header</h1>\n  <header class=\"ui fixed menu above\">\n    <menu class=\"ui container\">\n      <a class=\"header item\" href=\"/tweets\">\n        <img class=\"logo\" src=\"/images/parrot.svg\"/>\n        True Parrot\n      </a>\n      <a class=\"header item\" href=\"/tweet\" show.bind=\"loggedIn\">\n        Tweet\n      </a>\n\n      {{#isAdmin}}\n      <a class=\"header item\" href=\"/admin/dashboard\">\n        Admin Dashboard\n      </a>\n      {{/isAdmin}}\n\n      <div class=\"right menu\">\n        <!-- Logged in navigation -->\n        <div class=\"ui dropdown item\" show.bind=\"loggedIn\">\n          <a href=\"/users/{{userId}}\">\n            <img class=\"ui avatar image\" src=\"{{gravatar}}\"/>\n            {{fullName}}\n          </a>\n          <i class=\"ui dropdown icon\"></i>\n\n          <div class=\"menu\">\n            <a class=\"item\" href=\"/users/{{userId}}\">Profile</a>\n            <a class=\"item\" href=\"/settings\">Settings</a>\n            <div class=\"divider\"></div>\n            <a class=\"item\" href=\"/logout\">Logout</a>\n          </div>\n        </div>\n\n        <!-- Not logged in navigation -->\n        <a class=\"item\" href=\"/login\" show.bind=\"!loggedIn\">\n          Log-in\n        </a>\n        <a class=\"item\" href=\"/signup\" show.bind=\"!loggedIn\">\n          Sign up\n        </a>\n      </div>\n    </menu>\n  </header>\n</template>\n"; });
+define('text!viewmodels/headerMenu/headerMenu.html', ['module'], function(module) { module.exports = "<template>\n  <h1>Header</h1>\n  <header class=\"ui fixed menu above\">\n    <menu class=\"ui container\">\n      <a class=\"header item\" href=\"/tweets\">\n        <img class=\"logo\" src=\"/images/parrot.svg\"/>\n        True Parrot\n      </a>\n      <a class=\"header item\" href=\"/tweet\" show.bind=\"loggedIn\">\n        Tweet\n      </a>\n\n      <a class=\"header item\" href=\"/admin/dashboard\" show.bind=\"loggedIn && currentUser.isAdmin()\">\n        Admin Dashboard\n      </a>\n\n      <div class=\"right menu\">\n        <!-- Logged in navigation -->\n        <div class=\"ui dropdown item\" show.bind=\"loggedIn\">\n          <a href=\"/users/{{userId}}\">\n            <img class=\"ui avatar image\" src=\"${currentUser.gravatar()}\"/>\n            ${currentUser.fullName()}\n          </a>\n          <i class=\"ui dropdown icon\"></i>\n\n          <div class=\"menu\">\n            <a class=\"item\" href=\"/users/{{userId}}\">Profile</a>\n            <a class=\"item\" href=\"/settings\">Settings</a>\n            <div class=\"divider\"></div>\n            <a class=\"item\" href=\"/logout\">Logout</a>\n          </div>\n        </div>\n\n        <!-- Not logged in navigation -->\n        <a class=\"item\" href=\"/login\" show.bind=\"!loggedIn\">\n          Log-in\n        </a>\n        <a class=\"item\" href=\"/signup\" show.bind=\"!loggedIn\">\n          Sign up\n        </a>\n      </div>\n    </menu>\n  </header>\n</template>\n"; });
 //# sourceMappingURL=app-bundle.js.map
