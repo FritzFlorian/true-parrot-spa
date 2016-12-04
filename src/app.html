@@ -1,3 +1,10 @@
 <template>
-  <h1>${message}</h1>
+  <compose view-model="./viewmodels/headerMenu/headerMenu"></compose>
+  <section class="ui container" id="main-content">
+    {{> flashMessage }}
+
+    <h1>Testing</h1>
+
+    {{{content}}}
+  </section>
 </template>

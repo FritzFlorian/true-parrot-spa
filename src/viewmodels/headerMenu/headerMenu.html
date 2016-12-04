@@ -1,0 +1,46 @@
+<template>
+  <h1>Header</h1>
+  <header class="ui fixed menu above">
+    <menu class="ui container">
+      <a class="header item" href="/tweets">
+        <img class="logo" src="/images/parrot.svg"/>
+        True Parrot
+      </a>
+      <a class="header item" href="/tweet" show.bind="loggedIn">
+        Tweet
+      </a>
+
+      {{#isAdmin}}
+      <a class="header item" href="/admin/dashboard">
+        Admin Dashboard
+      </a>
+      {{/isAdmin}}
+
+      <div class="right menu">
+        <!-- Logged in navigation -->
+        <div class="ui dropdown item" show.bind="loggedIn">
+          <a href="/users/{{userId}}">
+            <img class="ui avatar image" src="{{gravatar}}"/>
+            {{fullName}}
+          </a>
+          <i class="ui dropdown icon"></i>
+
+          <div class="menu">
+            <a class="item" href="/users/{{userId}}">Profile</a>
+            <a class="item" href="/settings">Settings</a>
+            <div class="divider"></div>
+            <a class="item" href="/logout">Logout</a>
+          </div>
+        </div>
+
+        <!-- Not logged in navigation -->
+        <a class="item" href="/login" show.bind="!loggedIn">
+          Log-in
+        </a>
+        <a class="item" href="/signup" show.bind="!loggedIn">
+          Sign up
+        </a>
+      </div>
+    </menu>
+  </header>
+</template>
