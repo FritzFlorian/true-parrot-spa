@@ -1,4 +1,5 @@
 import User from "./user";
+import Tweet from "./tweet";
 
 export class LoginStatus {
   success: boolean;
@@ -9,5 +10,13 @@ export class LoginStatus {
     this.success = success;
     this.error = error;
     this.user = user;
+  }
+}
+
+export class TweetsChanged {
+  tweets: Tweet[];
+
+  constructor(tweets:Tweet[]) {
+    this.tweets = tweets;
   }
 }

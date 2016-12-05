@@ -2,12 +2,14 @@ import User from "./user";
 
 export default class Tweet {
   parroting: string[];
+  id: string;
   message: string;
   image: string;
   createdAt: Date;
   creator: User;
 
-  constructor(message:string, image:string, parroting:string[], createdAt:Date, user:User) {
+  constructor(id:string, message:string, image:string, parroting:string[], createdAt:Date, user:User) {
+    this.id = id;
     this.image = image;
     this.message = message;
     this.parroting = parroting;

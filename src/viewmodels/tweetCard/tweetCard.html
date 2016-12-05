@@ -14,10 +14,9 @@
       <img src="${tweet.image}">
     </div>
     <div class="extra content">
-      <a show.bind="tweet.canUserDeletePost(currentUser)">
+      <a show.bind="tweet.canUserDeletePost(currentUser)" click.delegate="delete($event)">
         <i class="big trash icon"></i>
         Delete
-        <!-- TODO: add delete logic -->
       </a>
 
       <a class="right floated" id="parrot-{{ _id }}">
