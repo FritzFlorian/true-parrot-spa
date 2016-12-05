@@ -22,6 +22,7 @@
       // Hack to run existing jquery code.
       // Could replace this with custom elements later on.
       var runJquery = function () {
+        console.log("Running Jquerry");
         $('.ui.dropdown').dropdown({ on: 'hover' });
         $('.message .close')
           .on('click', function() {

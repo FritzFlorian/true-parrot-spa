@@ -38,13 +38,14 @@ export default class AsyncHttpClient {
   authenticate(url:string, user) {
     this.httpClient.post(url, user).then(response => {
       const status = response.content;
+
       if (status.success) {
         const user = new User(status.user._id, status.user.firstName, status.user.lastName,
                                 status.user.email, status.user.scope, status.token);
 
         localStorage["trueParrot"] = JSON.stringify(user);
         this.httpClient.configure(configuration => {
-          configuration.withHeader("Authorization", "bearer " + response.content.token);
+          configuration.withHeader("Authorization", "bearer " + status.token);
         });
 
         this.ea.publish(new LoginStatus(true, null, user));

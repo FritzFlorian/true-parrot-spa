@@ -16,7 +16,7 @@ export class App {
 
     this.ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
       if (loginStatus.success) {
-        this.router.navigateToRoute('landing');
+        this.router.navigateToRoute('tweets');
       } else {
         this.router.navigateToRoute('landing');
       }
@@ -56,6 +56,13 @@ export class App {
         nav: true,
         title: "Welcome",
       },
+      {
+        route: 'tweets',
+        name: 'tweets',
+        moduleId: 'viewmodels/tweets/tweets',
+        nav: true,
+        title: 'Tweets',
+      },
     ]);
 
     this.router = router;
@@ -63,8 +70,8 @@ export class App {
 }
 
 /**
- * The authorize step will check if a user should be allowed to access an route.
- * If not the user will be redirected to a correct route.
+ * The authorize step will check if a creator should be allowed to access an route.
+ * If not the creator will be redirected to a correct route.
  */
 class AuthorizeStep {
   run(navigationInstruction, next) {
