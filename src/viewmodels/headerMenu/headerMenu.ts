@@ -28,8 +28,4 @@ export class HeaderMenu {
 
     runJquery();
   }
-
-  logout() {
-    this.service.logout();
-  }
 }
