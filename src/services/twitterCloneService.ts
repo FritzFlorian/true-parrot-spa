@@ -1,16 +1,26 @@
-import {User} from "./User";
+import User from "./user";
 import {autoinject} from "aurelia-framework";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {LoginStatus} from "./messages";
+import AsyncHttpClient from "./asyncHttpClient";
 
 @autoinject()
-export class TwitterCloneService {
+export default class TwitterCloneService {
   currentUser: User;
   ea: EventAggregator;
+  httpClient: AsyncHttpClient;
 
-  constructor(ea:EventAggregator) {
-    this.currentUser = null;//new User("1234", "Test", "User", "test@test.com", []);
+  constructor(ea:EventAggregator, httpClient:AsyncHttpClient) {
     this.ea = ea;
+    this.httpClient = httpClient;
+
+    this.currentUser = httpClient.getAuthenticatedUser();
+    console.log("Loaded offline user");
+    console.log(this.currentUser);
+
+    ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
+      this.currentUser = loginStatus.user;
+    });
   }
 
   isAuthenticated(): boolean {
@@ -18,9 +28,13 @@ export class TwitterCloneService {
   }
 
   login(email:string, password:string) {
-    console.log("Try to login " + email + ", " + password);
+    this.httpClient.authenticate('/api/users/authenticate', { email: email, password: password });
+  }
 
-    this.currentUser = new  User("1234", "Test", "User", email, ["admin"]);
-    this.ea.publish(new LoginStatus(this.currentUser, null));
+  logout() {
+    this.httpClient.clearAuthentication();
+
+    this.currentUser = null;
+    this.ea.publish(new LoginStatus(false, "logout", null));
   }
 }

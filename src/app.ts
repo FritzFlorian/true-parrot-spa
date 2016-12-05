@@ -1,6 +1,6 @@
 import {autoinject} from "aurelia-framework";
 import {Router} from "aurelia-router";
-import {TwitterCloneService} from "./services/twitterCloneService";
+import TwitterCloneService from "./services/twitterCloneService";
 
 @autoinject()
 export class App {

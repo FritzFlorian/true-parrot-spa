@@ -1,18 +1,20 @@
 import * as gravatar from "gravatar";
 
-export class User {
+export default class User {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
   scope: string[];
+  token: string;
 
-  constructor(id:string, firstName:string, lastName:string, email:string, scope:string[]) {
+  constructor(id:string, firstName:string, lastName:string, email:string, scope:string[], token:string) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.scope = scope;
+    this.token = token;
   }
 
   fullName():string {

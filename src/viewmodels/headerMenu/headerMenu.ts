@@ -1,8 +1,8 @@
 import {autoinject} from "aurelia-framework";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {LoginStatus} from "../../services/messages";
-import {TwitterCloneService} from "../../services/twitterCloneService";
-import {User} from "../../services/user";
+import TwitterCloneService from "../../services/twitterCloneService";
+import User from "../../services/user";
 
 @autoinject()
 export class HeaderMenu {
@@ -17,8 +17,8 @@ export class HeaderMenu {
     this.ea = ea;
 
     ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
-      this.currentUser = this.service.currentUser;
-      this.loggedIn = this.service.isAuthenticated();
+      this.currentUser = loginStatus.user;
+      this.loggedIn = loginStatus.success;
     });
   }
 
@@ -27,5 +27,9 @@ export class HeaderMenu {
     this.loggedIn = this.service.isAuthenticated();
 
     runJquery();
+  }
+
+  logout() {
+    this.service.logout();
   }
 }

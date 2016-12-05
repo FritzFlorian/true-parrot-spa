@@ -1,11 +1,13 @@
-import {User} from "./User";
+import User from "./user";
 
 export class LoginStatus {
-  user: User;
+  success: boolean;
   error: string;
+  user: User;
 
-  constructor(user:User, error:string) {
-    this.user = user;
+  constructor(success: boolean, error:string, user: User) {
+    this.success = success;
     this.error = error;
+    this.user = user;
   }
 }

@@ -1,5 +1,5 @@
 import {autoinject} from "aurelia-framework";
-import {TwitterCloneService} from "../../services/twitterCloneService";
+import TwitterCloneService from "../../services/twitterCloneService";
 
 @autoinject()
 export class Login {
