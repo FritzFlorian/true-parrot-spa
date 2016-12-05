@@ -15,8 +15,6 @@ export default class TwitterCloneService {
     this.httpClient = httpClient;
 
     this.currentUser = httpClient.getAuthenticatedUser();
-    console.log("Loaded offline user");
-    console.log(this.currentUser);
 
     ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
       this.currentUser = loginStatus.user;
