@@ -29,6 +29,24 @@ export default class TwitterCloneService {
     this.httpClient.authenticate('/api/users/authenticate', { email: email, password: password });
   }
 
+  register(email:string, password:string, firstName:string, lastName:string, description:string) {
+    const params = {
+      email: email,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+      description: description,
+    };
+
+    this.httpClient.post('/api/users', params).then((result) => {
+      if (result.isSuccess) {
+        this.login(email, password);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
   logout() {
     this.httpClient.clearAuthentication();
 
