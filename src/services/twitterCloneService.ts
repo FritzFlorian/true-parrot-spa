@@ -3,6 +3,7 @@ import {autoinject} from "aurelia-framework";
 import {EventAggregator} from "aurelia-event-aggregator";
 import {LoginStatus} from "./messages";
 import AsyncHttpClient from "./asyncHttpClient";
+import Tweet from "./tweet";
 
 @autoinject()
 export default class TwitterCloneService {
@@ -10,11 +11,15 @@ export default class TwitterCloneService {
   ea: EventAggregator;
   httpClient: AsyncHttpClient;
 
+  tweets: Tweet[];
+
   constructor(ea:EventAggregator, httpClient:AsyncHttpClient) {
     this.ea = ea;
     this.httpClient = httpClient;
 
-    this.currentUser = httpClient.getAuthenticatedUser();
+    this.currentUser = this.httpClient.getAuthenticatedUser();
+    this.tweets = [];
+    this.reloadTweets();
 
     ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
       this.currentUser = loginStatus.user;
@@ -52,5 +57,18 @@ export default class TwitterCloneService {
 
     this.currentUser = null;
     this.ea.publish(new LoginStatus(false, "logout", null));
+  }
+
+  reloadTweets() {
+    this.httpClient.get("/api/tweets").then((response) => {
+      if (response.isSuccess) {
+        this.tweets = [];
+        for( let tweetJson of response.content) {
+          const tweetUser = new User(tweetJson.creator._id, tweetJson.creator.firstName, tweetJson.creator.lastName,
+                                        tweetJson.creator.email, tweetJson.creator.scope);
+          this.tweets.push(new Tweet(tweetJson.message, new Date(tweetJson.createdAt), tweetUser));
+        }
+      }
+    });
   }
 }

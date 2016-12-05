@@ -8,7 +8,7 @@ export default class User {
   scope: string[];
   token: string;
 
-  constructor(id:string, firstName:string, lastName:string, email:string, scope:string[], token:string) {
+  constructor(id:string, firstName:string, lastName:string, email:string, scope:string[], token:string = "") {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
