@@ -14,7 +14,8 @@ export class App {
   configureRouter(config, router:Router) {
     config.map([
       { route: '', name: 'landing', moduleId: 'viewmodels/landing/landing', nav: true, title: 'Welcome' },
-      { route: 'other', name: 'other', moduleId: 'viewmodels/headerMenu/headerMenu', nav: true, title: 'Other' },
+      { route: 'login', name: 'login', moduleId: 'viewmodels/login/login', nav: true, title: 'Login' },
+      { route: 'signup', name: 'signup', moduleId: 'viewmodels/signup/signup', nav: true, title: 'Signup' },
     ]);
 
     this.router = router;
