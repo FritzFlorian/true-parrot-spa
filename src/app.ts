@@ -1,24 +1,80 @@
-import {autoinject} from "aurelia-framework";
-import {Router} from "aurelia-router";
+import {autoinject, Aurelia} from "aurelia-framework";
+import {Router, Redirect} from "aurelia-router";
 import TwitterCloneService from "./services/twitterCloneService";
+import {EventAggregator} from "aurelia-event-aggregator";
+import {LoginStatus} from "./services/messages";
 
 @autoinject()
 export class App {
   router: Router;
   service: TwitterCloneService;
+  ea: EventAggregator;
 
-  constructor(service:TwitterCloneService) {
+  constructor(service:TwitterCloneService, ea:EventAggregator, au:Aurelia) {
     this.service = service;
+    this.ea = ea;
+
+    this.ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
+      if (loginStatus.success) {
+        this.router.navigateToRoute('landing');
+      } else {
+        this.router.navigateToRoute('landing');
+      }
+    });
   }
 
   configureRouter(config, router:Router) {
+    const step = new AuthorizeStep();
+    config.addAuthorizeStep(step);
+
     config.map([
-      { route: '', name: 'landing', moduleId: 'viewmodels/landing/landing', nav: true, title: "Welcome" },
-      { route: 'login', name: 'login', moduleId: 'viewmodels/login/login', nav: true, title: "Login" },
-      { route: 'signup', name: 'signup', moduleId: 'viewmodels/signup/signup', nav: true, title: "Signup" },
-      { route: 'logout', name: 'logout', moduleId: 'viewmodels/logout/logout', nav: true, title: "Logout"},
+      {
+        route: 'logout',
+        name: 'logout',
+        moduleId: 'viewmodels/logout/logout',
+        nav: true,
+        title: "Logout",
+      },
+      {
+        route: 'login',
+        name: 'login',
+        moduleId: 'viewmodels/login/login',
+        nav: true,
+        title: "Login",
+      },
+      {
+        route: 'signup',
+        name: 'signup',
+        moduleId: 'viewmodels/signup/signup',
+        nav: true,
+        title: "Signup",
+      },
+      {
+        route: '',
+        name: 'landing',
+        moduleId: 'viewmodels/landing/landing',
+        nav: true,
+        title: "Welcome",
+      },
     ]);
 
     this.router = router;
+  }
+}
+
+/**
+ * The authorize step will check if a user should be allowed to access an route.
+ * If not the user will be redirected to a correct route.
+ */
+class AuthorizeStep {
+  run(navigationInstruction, next) {
+    if (navigationInstruction.getAllInstructions().some(i => i.config.settings.auth)) {
+      var isLoggedIn = false;
+      if (!isLoggedIn) {
+        return next.cancel(new Redirect('login'));
+      }
+    }
+
+    return next();
   }
 }
