@@ -20,12 +20,12 @@
       </a>
 
       <a class="right floated" click.delegate="unParrot($event)" show.bind="tweet.hasParrotedTweet">
-        <img class="ui icon image" src="/images/parrot_round_highlight.svg"/>
+        <img class="ui icon image" src="./images/parrot_round_highlight.svg"/>
 
         ${tweet.parroting.length} parroting
       </a>
       <a class="right floated" click.delegate="parrot($event)" show.bind="!tweet.hasParrotedTweet"/>
-        <img class="ui icon image" src="/images/parrot_round.svg"/>
+        <img class="ui icon image" src="./images/parrot_round.svg"/>
 
         ${tweet.parroting.length} parroting
       </a>
