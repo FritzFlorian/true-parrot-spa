@@ -1,4 +1,5 @@
 import * as gravatar from "gravatar";
+import * as moment from "moment";
 
 export default class User {
   id: string;
@@ -46,5 +47,9 @@ export default class User {
 
   get bigGravatar():string {
     return gravatar.url(this.email, { s: '300' });
+  }
+
+  get timeAgo():string {
+    return moment(this.createdAt).fromNow();
   }
 }

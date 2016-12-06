@@ -1,7 +1,7 @@
 <template>
   <div class="ui fluid card">
     <div class="content">
-      <div class="right floated meta">${tweet.createdAt}</div>
+      <div class="right floated meta">${tweet.timeAgo}</div>
       <a href="/users/{{creator._id}}">
         <img class="ui avatar image" src="${tweet.creator.gravatar}">
         ${tweet.creator.fullName}

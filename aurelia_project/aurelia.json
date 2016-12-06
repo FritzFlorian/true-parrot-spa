@@ -117,6 +117,11 @@
           "aurelia-templating-binding",
           "blueimp-md5",
           {
+            "name": "moment",
+            "path": "../node_modules/moment/min",
+            "main": "moment.min"
+          },
+          {
             "name": "querystring",
             "path": "../node_modules/querystring",
             "main": "index"

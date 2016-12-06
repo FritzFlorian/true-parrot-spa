@@ -21,6 +21,7 @@ export default class TwitterCloneService {
 
     this.currentUser = this.httpClient.getAuthenticatedUser();
     this.tweets = [];
+    this.currentProfileTweets = [];
     this.reloadTweets();
 
     ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {

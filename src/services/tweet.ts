@@ -1,4 +1,5 @@
 import User from "./user";
+import * as moment from "moment";
 
 export default class Tweet {
   parroting: string[];
@@ -50,5 +51,9 @@ export default class Tweet {
     }
 
     return false;
+  }
+
+  get timeAgo():string {
+    return moment(this.createdAt).fromNow();
   }
 }
