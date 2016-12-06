@@ -59,12 +59,12 @@ export default class TwitterCloneService {
       description: description,
     };
 
-    this.httpClient.post('/api/users', params).then((result) => {
-      if (result.isSuccess) {
-        this.login(email, password);
-      }
+    return this.httpClient.post('/api/users', params).then((result) => {
+      this.login(email, password);
+
+      return true;
     }).catch((error) => {
-      console.log(error);
+      throw new ServiceError(error);
     });
   }
 
