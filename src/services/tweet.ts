@@ -20,6 +20,10 @@ export default class Tweet {
     this.creator = creator;
   }
 
+  static fromJson(json) {
+    return new Tweet(json._id, json.message, json.image, json.parroting, json.createdAt, User.fromJson(json.creator));
+  }
+
   updateCurrentUser(currentUser: User) {
     this.currentUser = currentUser;
   }

@@ -16,14 +16,18 @@
       <div class="right menu">
         <!-- Logged in navigation -->
         <div class="ui dropdown item" show.bind="loggedIn">
-          <a href="/users/{{userId}}">
+          <a route-href="route: profile;
+                         params.bind: {id: currentUser.id}">
             <img class="ui avatar image" src="${currentUser.gravatar}"/>
             ${currentUser.fullName}
           </a>
           <i class="ui dropdown icon"></i>
 
           <div class="menu">
-            <a class="item" href="/users/{{userId}}">Profile</a>
+            <a class="item" route-href="route: profile;
+                                        params.bind: {id: currentUser.id}">
+              Profile
+            </a>
             <a class="item" route-href="route: settings">Settings</a>
             <div class="divider"></div>
             <a class="item" route-href="route: logout">Logout</a>

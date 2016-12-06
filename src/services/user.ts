@@ -20,6 +20,10 @@ export default class User {
     this.description = description;
   }
 
+  static fromJson(json) {
+    return new User(json._id, json.firstName, json.lastName, json.email, json.description);
+  }
+
   get fullName():string {
     return this.firstName + " " + this.lastName;
   }

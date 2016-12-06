@@ -69,7 +69,15 @@ export class App {
         moduleId: 'viewmodels/settings/settings',
         nav: true,
         settings: { auth: true },
-        title: 'Tweets',
+        title: 'Settings',
+      },
+      {
+        route: 'profile/:id',
+        href: 'profile/:id',
+        name: 'profile',
+        moduleId: 'viewmodels/profile/profile',
+        nav: true,
+        title: 'Profile',
       },
     ]);
 
