@@ -7,14 +7,17 @@ export default class User {
   email: string;
   scope: string[];
   token: string;
+  description: string;
 
-  constructor(id:string, firstName:string, lastName:string, email:string, scope:string[], token:string = "") {
+  constructor(id:string, firstName:string, lastName:string, email:string,
+                description:string = "", scope:string[] = [], token:string = "") {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.scope = scope;
     this.token = token;
+    this.description = description;
   }
 
   fullName():string {

@@ -65,7 +65,7 @@ export default class TwitterCloneService {
         this.tweets = [];
         for (let tweetJson of response.content) {
           const tweetUser = new User(tweetJson.creator._id, tweetJson.creator.firstName, tweetJson.creator.lastName,
-                                        tweetJson.creator.email, tweetJson.creator.scope);
+                                        tweetJson.creator.email);
 
           const newTweet = new Tweet(tweetJson._id, tweetJson.message, tweetJson.image, tweetJson.parroting,
                                         new Date(tweetJson.createdAt), tweetUser);

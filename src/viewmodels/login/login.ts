@@ -14,4 +14,8 @@ export class Login {
   login(event) {
     this.service.login(this.email, this.password);
   }
+
+  attached() {
+    runJquery();
+  }
 }

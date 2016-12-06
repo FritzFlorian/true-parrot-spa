@@ -25,7 +25,7 @@ export default class AsyncHttpClient {
     if (localAuth && localAuth !== 'null') {
       const userJson = JSON.parse(localAuth);
       user = new User(userJson.id, userJson.firstName, userJson.lastName,
-                        userJson.email, userJson.scope, userJson.token);
+                        userJson.email, userJson.description, userJson.scope, userJson.token);
 
       this.httpClient.configure(http => {
         http.withHeader('Authorization', 'bearer ' + user.token);
@@ -41,7 +41,7 @@ export default class AsyncHttpClient {
 
       if (status.success) {
         const user = new User(status.user._id, status.user.firstName, status.user.lastName,
-                                status.user.email, status.user.scope, status.token);
+                                status.user.email, status.user.description, status.user.scope, status.token);
 
         localStorage["trueParrot"] = JSON.stringify(user);
         this.httpClient.configure(configuration => {

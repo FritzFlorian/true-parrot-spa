@@ -17,4 +17,8 @@ export class Signup {
   register(event) {
     this.service.register(this.email, this.password, this.firstName, this.lastName, this.description);
   }
+
+  attached() {
+    runJquery();
+  }
 }

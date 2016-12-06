@@ -12,4 +12,8 @@ export class Logout {
   logout() {
     this.service.logout();
   }
+
+  attached() {
+    runJquery();
+  }
 }

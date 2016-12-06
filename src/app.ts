@@ -24,7 +24,7 @@ export class App {
   }
 
   configureRouter(config, router:Router) {
-    const step = new AuthorizeStep();
+    const step = new AuthorizeStep(this.service);
     config.addAuthorizeStep(step);
 
     config.map([
@@ -63,6 +63,14 @@ export class App {
         nav: true,
         title: 'Tweets',
       },
+      {
+        route: 'settings',
+        name: 'settings',
+        moduleId: 'viewmodels/settings/settings',
+        nav: true,
+        settings: { auth: true },
+        title: 'Tweets',
+      },
     ]);
 
     this.router = router;
@@ -74,9 +82,15 @@ export class App {
  * If not the creator will be redirected to a correct route.
  */
 class AuthorizeStep {
+  service: TwitterCloneService;
+
+  constructor(service:TwitterCloneService) {
+    this.service = service;
+  }
+
   run(navigationInstruction, next) {
     if (navigationInstruction.getAllInstructions().some(i => i.config.settings.auth)) {
-      var isLoggedIn = false;
+      var isLoggedIn = this.service.isAuthenticated;
       if (!isLoggedIn) {
         return next.cancel(new Redirect('login'));
       }
