@@ -32,7 +32,7 @@ export default class Tweet {
     if (!this.currentUser) {
       return false;
     }
-    if (this.currentUser.id == this.creator.id) {
+    if (this.currentUser.id == this.creator.id || this.currentUser.isAdmin) {
       return true;
     }
 

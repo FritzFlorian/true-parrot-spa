@@ -20,3 +20,24 @@ export class TweetsChanged {
     this.tweets = tweets;
   }
 }
+
+export class FlashMessage {
+  message: string;
+  displayIn: number;
+
+  constructor(message:string, displayIn:number = 1) {
+    this.message = message;
+    this.displayIn = displayIn;
+  }
+
+  displayNow() {
+    this.displayIn = 0;
+    return this;
+  }
+
+  get isDisplayed():boolean {
+    return this.displayIn == 0;
+  }
+}
+
+export class PageChanged { }

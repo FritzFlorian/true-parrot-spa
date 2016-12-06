@@ -4,6 +4,7 @@ import Fixtures from "./fixtures";
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {LoginStatus} from './messages';
 import User from "./user";
+import {ServiceError} from "./twitterCloneService";
 
 @autoinject()
 export default class AsyncHttpClient {
@@ -35,21 +36,19 @@ export default class AsyncHttpClient {
   }
 
   authenticate(url:string, user) {
-    this.httpClient.post(url, user).then(response => {
+    return this.httpClient.post(url, user).then(response => {
       const status = response.content;
 
-      if (status.success) {
-        const user = User.fromJson(status.user);
-        user.token = status.token;
+      const user = User.fromJson(status.user);
+      user.token = status.token;
 
-        this.setCurrentUser(user);
+      this.setCurrentUser(user);
+      this.ea.publish(new LoginStatus(true, null, user));
 
-        this.ea.publish(new LoginStatus(true, null, user));
-      } else {
-        this.ea.publish(new LoginStatus(false, status.message, null));
-      }
+      return user;
     }).catch((error) => {
-      this.ea.publish(new LoginStatus(false, "service not available", null));
+      console.log(new ServiceError(error));
+      throw new ServiceError(error);
     });
   }
 
