@@ -1,3 +1,3 @@
 export default class Fixtures {
-  baseUrl: string = "http://localhost:4000";
+  baseUrl: string = "https://true-parrot.herokuapp.com";
 }
