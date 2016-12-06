@@ -1,7 +1,7 @@
 <template>
   <section class="ui raised segment">
-    <div class="masonry-grid">
-      <div class="masonry-grid-item" repeat.for="tweet of tweets">
+    <div class="ui three column grid">
+      <div class="column" repeat.for="tweet of tweets">
         <compose view-model="../tweetCard/tweetCard"
                   model.bind="{ currentUser: currentUser, tweet: tweet}"></compose>
       </div>
