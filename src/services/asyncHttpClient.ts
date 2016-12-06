@@ -75,4 +75,8 @@ export default class AsyncHttpClient {
   delete(url:string) {
     return this.httpClient.delete(url);
   }
+
+  patch(url:string, obj) {
+    return this.httpClient.patch(url, obj);
+  }
 }

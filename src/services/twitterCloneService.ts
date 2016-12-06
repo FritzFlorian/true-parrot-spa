@@ -67,8 +67,11 @@ export default class TwitterCloneService {
           const tweetUser = new User(tweetJson.creator._id, tweetJson.creator.firstName, tweetJson.creator.lastName,
                                         tweetJson.creator.email, tweetJson.creator.scope);
 
-          this.tweets.push(new Tweet(tweetJson._id, tweetJson.message, tweetJson.image, tweetJson.parroting,
-                                        new Date(tweetJson.createdAt), tweetUser));
+          const newTweet = new Tweet(tweetJson._id, tweetJson.message, tweetJson.image, tweetJson.parroting,
+                                        new Date(tweetJson.createdAt), tweetUser);
+          newTweet.updateCurrentUser(this.currentUser);
+
+          this.tweets.push(newTweet);
         }
 
         this.ea.publish(new TweetsChanged(this.tweets));
@@ -90,4 +93,21 @@ export default class TwitterCloneService {
       }
     });
   }
+
+  parrotTweet(tweet:Tweet, parroting:boolean) {
+    this.httpClient.patch("/api/tweets/" + tweet.id + "/parrot", { parroting: parroting }).then((result) => {
+      if (result.isSuccess) {
+        this.tweets.forEach((existingTweet) => {
+          if (existingTweet.id == tweet.id) {
+            existingTweet.parroting = result.content.parroting;
+          }
+        });
+
+        this.ea.publish(new TweetsChanged(this.tweets));
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
 }

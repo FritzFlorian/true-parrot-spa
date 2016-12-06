@@ -21,4 +21,12 @@ export class TweetCard {
   delete() {
     this.service.deleteTweet(this.tweet);
   }
+
+  parrot() {
+    this.service.parrotTweet(this.tweet, true);
+  }
+
+  unParrot() {
+    this.service.parrotTweet(this.tweet, false);
+  }
 }

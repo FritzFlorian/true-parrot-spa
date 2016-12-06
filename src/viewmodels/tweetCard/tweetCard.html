@@ -14,17 +14,20 @@
       <img src="${tweet.image}">
     </div>
     <div class="extra content">
-      <a show.bind="tweet.canUserDeletePost(currentUser)" click.delegate="delete($event)">
+      <a show.bind="tweet.canUserDeletePost" click.delegate="delete($event)">
         <i class="big trash icon"></i>
         Delete
       </a>
 
-      <a class="right floated" id="parrot-{{ _id }}">
-        <img class="ui icon image" src="/images/parrot_round_highlight.svg" show.bind="tweet.hasParrotedTweet(currentUser)"/>
-        <img class="ui icon image" src="/images/parrot_round.svg" show.bind="!tweet.hasParrotedTweet(currentUser)"/>
+      <a class="right floated" click.delegate="unParrot($event)" show.bind="tweet.hasParrotedTweet">
+        <img class="ui icon image" src="/images/parrot_round_highlight.svg"/>
 
         ${tweet.parroting.length} parroting
-        <!-- TODO: add parroting logic -->
+      </a>
+      <a class="right floated" click.delegate="parrot($event)" show.bind="!tweet.hasParrotedTweet"/>
+        <img class="ui icon image" src="/images/parrot_round.svg"/>
+
+        ${tweet.parroting.length} parroting
       </a>
     </div>
   </div>

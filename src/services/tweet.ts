@@ -8,32 +8,39 @@ export default class Tweet {
   createdAt: Date;
   creator: User;
 
-  constructor(id:string, message:string, image:string, parroting:string[], createdAt:Date, user:User) {
+  // Needed to compute virtual properties
+  currentUser: User;
+
+  constructor(id:string, message:string, image:string, parroting:string[], createdAt:Date, creator:User) {
     this.id = id;
     this.image = image;
     this.message = message;
     this.parroting = parroting;
     this.createdAt = createdAt;
-    this.creator = user;
+    this.creator = creator;
   }
 
-  canUserDeletePost(user:User):boolean {
-    if (!user) {
+  updateCurrentUser(currentUser: User) {
+    this.currentUser = currentUser;
+  }
+
+  get canUserDeletePost():boolean {
+    if (!this.currentUser) {
       return false;
     }
-    if (user.id == this.creator.id) {
+    if (this.currentUser.id == this.creator.id) {
       return true;
     }
 
     return false;
   }
 
-  hasParrotedTweet(user:User):boolean {
-    if (!user) {
+  get hasParrotedTweet():boolean {
+    if (!this.currentUser) {
       return false;
     }
     for(let parrotingId of this.parroting) {
-      if (parrotingId == user.id) {
+      if (parrotingId == this.currentUser.id) {
         return true;
       }
     }
