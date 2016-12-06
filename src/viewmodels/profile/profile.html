@@ -1,3 +1,35 @@
 <template>
-  ${profile.tweets.length}
+  <section class="ui raised segment">
+    <div class="ui stackable column grid">
+      <div class="six wide column">
+        <div class="ui sticky" style="padding: 10px;">
+          <div class="ui fluid card">
+            <div class="image">
+              <img src="${profile.user.bigGravatar}">
+            </div>
+            <div class="content">
+              <a class="header" route-href="route: profile;
+                                    params.bind: {id: profile.user.id}">${profile.user.fullName}</a>
+              <div class="meta">
+                <span class="date">Joined ${profile.user.createdAt}</span>
+              </div>
+              <div class="description">
+                ${profile.user.description}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ten wide column">
+        <div class="ui two column stackable grid">
+          <div class="column" repeat.for="tweet of profile.tweets">
+            <compose view-model="../tweetCard/tweetCard"
+                     model.bind="{ currentUser: currentUser, tweet: tweet}"></compose>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 </template>

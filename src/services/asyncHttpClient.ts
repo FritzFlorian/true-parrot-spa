@@ -24,8 +24,7 @@ export default class AsyncHttpClient {
 
     if (localAuth && localAuth !== 'null') {
       const userJson = JSON.parse(localAuth);
-      user = new User(userJson.id, userJson.firstName, userJson.lastName,
-                        userJson.email, userJson.description, userJson.scope, userJson.token);
+      user = User.fromJson(userJson);
 
       this.httpClient.configure(http => {
         http.withHeader('Authorization', 'bearer ' + user.token);
@@ -40,8 +39,8 @@ export default class AsyncHttpClient {
       const status = response.content;
 
       if (status.success) {
-        const user = new User(status.user._id, status.user.firstName, status.user.lastName,
-                                status.user.email, status.user.description, status.user.scope, status.token);
+        const user = User.fromJson(status.user);
+        user.token = status.token;
 
         this.setCurrentUser(user);
 
