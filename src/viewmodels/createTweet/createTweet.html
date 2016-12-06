@@ -12,5 +12,15 @@
       </div>
       <button class="ui blue submit button">Post</button>
     </form>
+
+    <div class="ui negative message transition" show.bind="formErrors.length > 0">
+      <i class="close icon"></i>
+      <div class="header">
+        There was some errors with your submission
+      </div>
+      <ul class="list">
+        <li repeat.for="error of formErrors">${error.message}</li>
+      </ul>
+    </div>
   </section>
 </template>

@@ -1,6 +1,7 @@
 import {autoinject} from "aurelia-framework";
 import TwitterCloneService from "../../services/twitterCloneService";
 import User from "../../services/user";
+import {ServiceError} from "../../services/twitterCloneService";
 
 @autoinject()
 export class Settings {
@@ -12,6 +13,8 @@ export class Settings {
   lastName: string;
   password: string;
   description: string;
+
+  formErrors: any[];
 
   constructor(service:TwitterCloneService) {
     this.service = service;
@@ -33,6 +36,11 @@ export class Settings {
   }
 
   saveSettings() {
-    this.service.updateSettings(this.email, this.firstName, this.lastName, this.description, this.password);
+    this.service.updateSettings(this.email, this.firstName, this.lastName, this.description, this.password)
+      .then((user) => {
+        //TODO: message that settings where saved
+      }).catch((error:ServiceError) => {
+        this.formErrors = error.formErrors;
+      });
   }
 }

@@ -148,16 +148,19 @@ export default class TwitterCloneService {
    * @param description The new description
    * @param password optional: The new password, if not provided the password stays unchanged
    */
-  updateSettings(email:string, firstName:string, lastName:string, description:string, password:string = null) {
+  updateSettings(email:string, firstName:string, lastName:string, description:string, password:string = "") {
     const settings = {
       email: email,
       firstName: firstName,
       lastName: lastName,
       description: description,
-      password: password,
     };
 
-    this.httpClient.patch("/api/users/" + this.currentUser.id, settings).then((result) => {
+    if (password.length > 0) {
+      settings["password"] = password;
+    }
+
+    return this.httpClient.patch("/api/users/" + this.currentUser.id, settings).then((result) => {
       if (result.isSuccess) {
         this.currentUser.firstName = result.content.firstName;
         this.currentUser.lastName = result.content.lastName;
@@ -166,6 +169,9 @@ export default class TwitterCloneService {
       }
 
       this.httpClient.setCurrentUser(this.currentUser);
+      return this.currentUser;
+    }).catch((error) => {
+      throw new ServiceError(error);
     });
   }
 
@@ -216,15 +222,28 @@ export default class TwitterCloneService {
       form.append('image', image);
     }
 
-    this.httpClient.post("/api/tweets", form).then((result) => {
-      if (result.isSuccess) {
-        const newTweet = Tweet.fromJson(result.content);
+    return this.httpClient.post("/api/tweets", form).then((result) => {
+       const newTweet = Tweet.fromJson(result.content);
 
-        this.tweets.unshift(newTweet);
+      this.tweets.unshift(newTweet);
+      this.ea.publish(new TweetsChanged(this.tweets));
 
-        this.ea.publish(new TweetsChanged(this.tweets));
-      }
+      return newTweet;
+    }).catch((error) => {
+      throw new ServiceError(error);
     });
   }
+}
 
+export class ServiceError extends Error {
+  formErrors;
+  message:string;
+
+  constructor(error) {
+    const response = JSON.parse(error.response);
+    super(response.error);
+
+    this.message = response.error;
+    this.formErrors = response.validation_errors || [];
+  }
 }
