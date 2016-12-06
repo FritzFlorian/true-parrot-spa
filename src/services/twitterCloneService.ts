@@ -13,6 +13,7 @@ export default class TwitterCloneService {
   httpClient: AsyncHttpClient;
 
   tweets: Tweet[];
+  currentProfileTweets: Tweet[];
 
   constructor(ea:EventAggregator, httpClient:AsyncHttpClient) {
     this.ea = ea;
@@ -111,6 +112,11 @@ export default class TwitterCloneService {
             this.tweets.splice(index, 1);
           }
         });
+        this.currentProfileTweets.forEach((existingTweet, index) => {
+          if (existingTweet.id == tweet.id) {
+            this.currentProfileTweets.splice(index, 1);
+          }
+        });
 
         this.ea.publish(new TweetsChanged(this.tweets));
       }
@@ -131,6 +137,7 @@ export default class TwitterCloneService {
             existingTweet.parroting = result.content.parroting;
           }
         });
+        tweet.parroting = result.content.parroting;
 
         this.ea.publish(new TweetsChanged(this.tweets));
       }
@@ -199,8 +206,12 @@ export default class TwitterCloneService {
         profile.tweets = [];
 
         for (let tweetJson of result.content) {
-          profile.tweets.push(Tweet.fromJson(tweetJson));
+          const newTweet = Tweet.fromJson(tweetJson);
+          newTweet.updateCurrentUser(this.currentUser);
+          profile.tweets.push(newTweet);
         }
+
+        this.currentProfileTweets = profile.tweets;
 
         return profile;
       } else {
