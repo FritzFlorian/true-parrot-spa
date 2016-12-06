@@ -1,0 +1,11 @@
+<template>
+  <div repeat.for="message of messages">
+    <div class="ui message" show.bind="message.isDisplayed">
+      <i class="close icon"></i>
+      <div class="header">
+        Info
+      </div>
+      <p>${message.message}</p>
+    </div>
+  </div>
+</template>

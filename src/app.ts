@@ -2,7 +2,7 @@ import {autoinject} from "aurelia-framework";
 import {Router, Redirect} from "aurelia-router";
 import TwitterCloneService from "./services/twitterCloneService";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {LoginStatus} from "./services/messages";
+import {LoginStatus, PageChanged} from "./services/messages";
 
 @autoinject()
 export class App {
@@ -24,8 +24,10 @@ export class App {
   }
 
   configureRouter(config, router:Router) {
-    const step = new AuthorizeStep(this.service);
-    config.addAuthorizeStep(step);
+    const authStep = new AuthorizeStep(this.service);
+    config.addAuthorizeStep(authStep);
+    const flashStep = new ClearFlashStep(this.ea);
+    config.addPreActivateStep(flashStep);
 
     config.map([
       {
@@ -111,6 +113,20 @@ class AuthorizeStep {
         return next.cancel(new Redirect('login'));
       }
     }
+
+    return next();
+  }
+}
+
+class ClearFlashStep {
+  ea: EventAggregator;
+
+  constructor(ea:EventAggregator) {
+    this.ea = ea;
+  }
+
+  run(navigationInstruction, next) {
+    this.ea.publish(new PageChanged());
 
     return next();
   }

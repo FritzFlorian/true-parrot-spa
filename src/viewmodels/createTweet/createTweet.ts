@@ -3,6 +3,8 @@ import {Router} from "aurelia-router";
 import TwitterCloneService from "../../services/twitterCloneService";
 import {ServiceError} from "../../services/twitterCloneService";
 import Tweet from "../../services/tweet";
+import {EventAggregator} from "aurelia-event-aggregator";
+import {FlashMessage} from "../../services/messages";
 
 @autoinject()
 export class Login {
@@ -11,10 +13,12 @@ export class Login {
   files: string;
   router: Router;
   formErrors: any[];
+  ea: EventAggregator;
 
-  constructor(service:TwitterCloneService, router:Router) {
+  constructor(service:TwitterCloneService, router:Router, ea:EventAggregator) {
     this.service = service;
     this.router = router;
+    this.ea = ea;
     this.formErrors = [];
   }
 
@@ -26,6 +30,7 @@ export class Login {
 
     this.service.createTweet(this.message, image).then((result:Tweet) => {
       this.router.navigateToRoute('tweets');
+      this.ea.publish(new FlashMessage("Tweet Created"));
     }).catch((error:ServiceError) => {
       this.formErrors = error.formErrors;
     });
