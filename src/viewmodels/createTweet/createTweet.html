@@ -1,0 +1,16 @@
+<template>
+  <section class="ui raised segment fill">
+    <form submit.delegate="tweet()" class="ui form">
+      <h3 class="ui dividing header">Share your mind with the world!</h3>
+      <div class="field">
+        <label>Message (max. 140 Characters)</label>
+        <input placeholder="Message" value.bind="message" type="text" name="message">
+      </div>
+      <div class="field">
+        <label>Image (optional)</label>
+        <input type="file" name="image" files.bind="files">
+      </div>
+      <button class="ui blue submit button">Post</button>
+    </form>
+  </section>
+</template>

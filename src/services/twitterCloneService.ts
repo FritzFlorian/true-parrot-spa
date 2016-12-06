@@ -31,10 +31,25 @@ export default class TwitterCloneService {
     return !!this.currentUser;
   }
 
+  /**
+   * Logs a user in
+   *
+   * @param email The email of the user to login
+   * @param password The password of the user to login
+   */
   login(email:string, password:string) {
     this.httpClient.authenticate('/api/users/authenticate', { email: email, password: password });
   }
 
+  /**
+   * Register a new user. All parameters are required.
+   *
+   * @param email
+   * @param password
+   * @param firstName
+   * @param lastName
+   * @param description
+   */
   register(email:string, password:string, firstName:string, lastName:string, description:string) {
     const params = {
       email: email,
@@ -53,6 +68,9 @@ export default class TwitterCloneService {
     });
   }
 
+  /**
+   * Logs the local user out.
+   */
   logout() {
     this.httpClient.clearAuthentication();
 
@@ -60,16 +78,15 @@ export default class TwitterCloneService {
     this.ea.publish(new LoginStatus(false, "logout", null));
   }
 
+  /**
+   * Reload the global timeline of tweets from the server.
+   */
   reloadTweets() {
     this.httpClient.get("/api/tweets").then((response) => {
       if (response.isSuccess) {
         this.tweets = [];
         for (let tweetJson of response.content) {
-          const tweetUser = new User(tweetJson.creator._id, tweetJson.creator.firstName, tweetJson.creator.lastName,
-                                        tweetJson.creator.email);
-
-          const newTweet = new Tweet(tweetJson._id, tweetJson.message, tweetJson.image, tweetJson.parroting,
-                                        new Date(tweetJson.createdAt), tweetUser);
+          const newTweet = Tweet.fromJson(tweetJson);
           newTweet.updateCurrentUser(this.currentUser);
 
           this.tweets.push(newTweet);
@@ -81,6 +98,11 @@ export default class TwitterCloneService {
 
   }
 
+  /**
+   * Deletes the given tweet (user needs permission to do so).
+   *
+   * @param tweet The tweet to be deleted
+   */
   deleteTweet(tweet:Tweet) {
     this.httpClient.delete("/api/tweets/" + tweet.id).then((result) => {
       if (result.isSuccess) {
@@ -95,6 +117,12 @@ export default class TwitterCloneService {
     });
   }
 
+  /**
+   * Sets the 'parroting' status of an tweet for the current user.
+   *
+   * @param tweet The tweet to be parroted/un parroted
+   * @param parroting Boolean indicating the desired parroting state
+   */
   parrotTweet(tweet:Tweet, parroting:boolean) {
     this.httpClient.patch("/api/tweets/" + tweet.id + "/parrot", { parroting: parroting }).then((result) => {
       if (result.isSuccess) {
@@ -111,7 +139,16 @@ export default class TwitterCloneService {
     });
   }
 
-  updateSettings(email:string, firstName:string, lastName:string, description:string, password:string) {
+  /**
+   * Updates the settings of the current user.
+   *
+   * @param email The new email address
+   * @param firstName The new firstName
+   * @param lastName The new lastName
+   * @param description The new description
+   * @param password optional: The new password, if not provided the password stays unchanged
+   */
+  updateSettings(email:string, firstName:string, lastName:string, description:string, password:string = null) {
     const settings = {
       email: email,
       firstName: firstName,
@@ -162,6 +199,30 @@ export default class TwitterCloneService {
         return profile;
       } else {
         throw 'could not load profile';
+      }
+    });
+  }
+
+  /**
+   * Creates a new tweet for the current user.
+   *
+   * @param message The message to tweet
+   * @param image An form image to upload with the tweet
+   */
+  createTweet(message:string, image = null) {
+    const form = new FormData();
+    form.append('json', JSON.stringify({ message: message }));
+    if (image) {
+      form.append('image', image);
+    }
+
+    this.httpClient.post("/api/tweets", form).then((result) => {
+      if (result.isSuccess) {
+        const newTweet = Tweet.fromJson(result.content);
+
+        this.tweets.unshift(newTweet);
+
+        this.ea.publish(new TweetsChanged(this.tweets));
       }
     });
   }

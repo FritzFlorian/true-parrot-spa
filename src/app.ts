@@ -79,6 +79,14 @@ export class App {
         nav: true,
         title: 'Profile',
       },
+      {
+        route: 'tweet',
+        name: 'tweet',
+        moduleId: 'viewmodels/createTweet/createTweet',
+        nav: true,
+        settings: { auth: true },
+        title: 'Tweet',
+      },
     ]);
 
     this.router = router;
