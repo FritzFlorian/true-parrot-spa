@@ -2,11 +2,14 @@ import {autoinject} from "aurelia-framework";
 import TwitterCloneService from "../../services/twitterCloneService";
 import User from "../../services/user";
 import {ServiceError} from "../../services/twitterCloneService";
+import {FlashMessage} from "../../services/messages";
+import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject()
 export class Settings {
   service: TwitterCloneService;
   currentUser: User;
+  ea:EventAggregator;
 
   email: string;
   firstName: string;
@@ -16,8 +19,9 @@ export class Settings {
 
   formErrors: any[];
 
-  constructor(service:TwitterCloneService) {
+  constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
+    this.ea = ea;
   }
 
   updateCurrentUser(user:User) {
@@ -38,7 +42,7 @@ export class Settings {
   saveSettings() {
     this.service.updateSettings(this.email, this.firstName, this.lastName, this.description, this.password)
       .then((user) => {
-        //TODO: message that settings where saved
+        this.ea.publish(new FlashMessage("Settings Saved").displayNow());
       }).catch((error:ServiceError) => {
         this.formErrors = error.formErrors;
       });
