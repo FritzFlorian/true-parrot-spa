@@ -1,9 +1,0 @@
-{
-  "resolution": "main",
-  "tree": {
-    "src": "https://raw.githubusercontent.com/types/npm-gravatar/5b5a86a02df69230cc69abcd34e97ab14a82595e/typings.json",
-    "raw": "registry:npm/gravatar#1.4.0+20160723033700",
-    "main": "src/index.d.ts",
-    "name": "gravatar"
-  }
-}
