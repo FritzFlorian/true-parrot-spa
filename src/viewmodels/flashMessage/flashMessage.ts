@@ -14,17 +14,29 @@ export class HeaderMessage {
 
     ea.subscribe(FlashMessage, (message:FlashMessage) => {
       this.messages.unshift(message);
+
+      // Delete too many, distracting messages
+      if (this.messages.length > 3) {
+        this.messages.shift();
+      }
     });
 
     // Display current messages, delete old ones
     ea.subscribe(PageChanged, (unused:PageChanged) => {
-      this.messages.forEach((message) => {
-        message.displayIn--;
-      });
+      this.displayNextMessages();
+    });
+  }
 
-      this.messages = this.messages.filter((message) => {
-        return message.displayIn >= 0;
-      });
+  /**
+   * 'shifts' the messages to display the messages with the next 'displayIn' values.
+   */
+  displayNextMessages() {
+    this.messages.forEach((message) => {
+      message.displayIn--;
+    });
+
+    this.messages = this.messages.filter((message) => {
+      return message.displayIn >= 0;
     });
   }
 

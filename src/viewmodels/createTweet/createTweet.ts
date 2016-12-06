@@ -30,7 +30,10 @@ export class Login {
 
     this.service.createTweet(this.message, image).then((result:Tweet) => {
       this.router.navigateToRoute('tweets');
-      this.ea.publish(new FlashMessage("Tweet Created"));
+      this.ea.publish(new FlashMessage("Tweet Created1"));
+      this.ea.publish(new FlashMessage("Tweet Created2"));
+      this.ea.publish(new FlashMessage("Tweet Created3"));
+      this.ea.publish(new FlashMessage("Tweet Created4"));
     }).catch((error:ServiceError) => {
       this.formErrors = error.formErrors;
     });

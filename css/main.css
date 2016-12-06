@@ -33,6 +33,16 @@ menu a {
     height: 600px;
 }
 
+.ui.message {
+    margin: 8px;
+}
+.ui.message:first-child {
+  margin: 8px;
+}
+.ui.message:last-child {
+  margin: 8px;
+}
+
 /** Tweet Grid **/
 .masonry-grid {
 }
