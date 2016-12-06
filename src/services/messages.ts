@@ -30,6 +30,11 @@ export class FlashMessage {
     this.displayIn = displayIn;
   }
 
+  displayNow() {
+    this.displayIn = 0;
+    return this;
+  }
+
   get isDisplayed():boolean {
     return this.displayIn == 0;
   }

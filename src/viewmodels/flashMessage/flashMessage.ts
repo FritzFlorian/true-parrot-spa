@@ -17,7 +17,7 @@ export class HeaderMessage {
 
       // Delete too many, distracting messages
       if (this.messages.length > 3) {
-        this.messages.shift();
+        this.messages.pop();
       }
     });
 
