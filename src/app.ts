@@ -1,4 +1,4 @@
-import {autoinject, Aurelia} from "aurelia-framework";
+import {autoinject} from "aurelia-framework";
 import {Router, Redirect} from "aurelia-router";
 import TwitterCloneService from "./services/twitterCloneService";
 import {EventAggregator} from "aurelia-event-aggregator";
@@ -10,7 +10,7 @@ export class App {
   service: TwitterCloneService;
   ea: EventAggregator;
 
-  constructor(service:TwitterCloneService, ea:EventAggregator, au:Aurelia) {
+  constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
     this.ea = ea;
 
