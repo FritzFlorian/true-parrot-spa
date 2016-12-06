@@ -20,11 +20,11 @@ export default class User {
     this.description = description;
   }
 
-  fullName():string {
+  get fullName():string {
     return this.firstName + " " + this.lastName;
   }
 
-  isAdmin():boolean {
+  get isAdmin():boolean {
     for (let role of this.scope) {
       if (role == "admin")
         return true;
@@ -33,7 +33,7 @@ export default class User {
     return false;
   }
 
-  gravatar():string {
+  get gravatar():string {
     return gravatar.url(this.email);
   }
 }

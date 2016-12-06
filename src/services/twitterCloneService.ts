@@ -110,4 +110,25 @@ export default class TwitterCloneService {
     });
   }
 
+  updateSettings(email:string, firstName:string, lastName:string, description:string, password:string) {
+    const settings = {
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      description: description,
+      password: password,
+    };
+
+    this.httpClient.patch("/api/users/" + this.currentUser.id, settings).then((result) => {
+      if (result.isSuccess) {
+        this.currentUser.firstName = result.content.firstName;
+        this.currentUser.lastName = result.content.lastName;
+        this.currentUser.description = result.content.description;
+        this.currentUser.email = result.content.email;
+      }
+
+      this.httpClient.setCurrentUser(this.currentUser);
+    });
+  }
+
 }

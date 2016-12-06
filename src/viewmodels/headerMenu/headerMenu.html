@@ -9,7 +9,7 @@
         Tweet
       </a>
 
-      <a class="header item" href="/admin/dashboard" show.bind="loggedIn && currentUser.isAdmin()">
+      <a class="header item" href="/admin/dashboard" show.bind="loggedIn && currentUser.isAdmin">
         Admin Dashboard
       </a>
 
@@ -17,8 +17,8 @@
         <!-- Logged in navigation -->
         <div class="ui dropdown item" show.bind="loggedIn">
           <a href="/users/{{userId}}">
-            <img class="ui avatar image" src="${currentUser.gravatar()}"/>
-            ${currentUser.fullName()}
+            <img class="ui avatar image" src="${currentUser.gravatar}"/>
+            ${currentUser.fullName}
           </a>
           <i class="ui dropdown icon"></i>
 

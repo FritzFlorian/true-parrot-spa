@@ -43,10 +43,7 @@ export default class AsyncHttpClient {
         const user = new User(status.user._id, status.user.firstName, status.user.lastName,
                                 status.user.email, status.user.description, status.user.scope, status.token);
 
-        localStorage["trueParrot"] = JSON.stringify(user);
-        this.httpClient.configure(configuration => {
-          configuration.withHeader("Authorization", "bearer " + status.token);
-        });
+        this.setCurrentUser(user);
 
         this.ea.publish(new LoginStatus(true, null, user));
       } else {
@@ -61,6 +58,13 @@ export default class AsyncHttpClient {
     localStorage["trueParrot"] = null;
     this.httpClient.configure(configuration => {
       configuration.withHeader("Authorization", "");
+    });
+  }
+
+  setCurrentUser(user:User) {
+    localStorage["trueParrot"] = JSON.stringify(user);
+    this.httpClient.configure(configuration => {
+      configuration.withHeader("Authorization", "bearer " + user.token);
     });
   }
 

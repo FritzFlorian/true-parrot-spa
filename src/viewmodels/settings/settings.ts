@@ -33,6 +33,6 @@ export class Settings {
   }
 
   saveSettings() {
-    console.log("SaveSettings: " + this.email);
+    this.service.updateSettings(this.email, this.firstName, this.lastName, this.description, this.password);
   }
 }
