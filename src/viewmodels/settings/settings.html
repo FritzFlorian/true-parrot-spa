@@ -27,15 +27,7 @@
       </div>
       <button class="ui blue submit button">Submit</button>
 
-      <div class="ui negative message transition" show.bind="formErrors.length > 0">
-        <i class="close icon"></i>
-        <div class="header">
-          There was some errors with your submission
-        </div>
-        <ul class="list">
-          <li repeat.for="error of formErrors">${error.message}</li>
-        </ul>
-      </div>
+      <compose view="../formErrors/formErrors.html"></compose>
     </form>
   </section>
 </template>

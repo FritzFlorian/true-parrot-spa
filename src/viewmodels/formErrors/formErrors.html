@@ -1,0 +1,11 @@
+<template>
+  <br/>
+  <div class="ui negative message transition" show.bind="formErrors.length > 0">
+    <div class="header">
+      There was some errors with your submission
+    </div>
+    <ul class="list">
+      <li repeat.for="error of formErrors">${error.message}</li>
+    </ul>
+  </div>
+</template>

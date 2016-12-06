@@ -38,7 +38,7 @@ export default class TwitterCloneService {
    * @param password The password of the user to login
    */
   login(email:string, password:string) {
-    this.httpClient.authenticate('/api/users/authenticate', { email: email, password: password });
+    return this.httpClient.authenticate('/api/users/authenticate', { email: email, password: password });
   }
 
   /**
