@@ -243,7 +243,7 @@ export class ServiceError extends Error {
     const response = JSON.parse(error.response);
     super(response.error);
 
-    this.message = response.error;
-    this.formErrors = response.validation_errors || [];
+    this.message = response.error || response.message;
+    this.formErrors = response.validation_errors || [{ message: this.message }];
   }
 }

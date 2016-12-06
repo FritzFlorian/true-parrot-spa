@@ -47,6 +47,7 @@ export default class AsyncHttpClient {
 
       return user;
     }).catch((error) => {
+      console.log(new ServiceError(error));
       throw new ServiceError(error);
     });
   }
