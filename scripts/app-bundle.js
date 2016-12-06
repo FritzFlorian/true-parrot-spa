@@ -132,7 +132,7 @@ define('services/fixtures',["require", "exports"], function (require, exports) {
     "use strict";
     var Fixtures = (function () {
         function Fixtures() {
-            this.baseUrl = "https://true-parrot.herokuapp.com";
+            this.baseUrl = "http://localhost:4000";
         }
         return Fixtures;
     }());
@@ -735,6 +735,36 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+define('viewmodels/signup/signup',["require", "exports", "aurelia-framework", "../../services/twitterCloneService"], function (require, exports, aurelia_framework_1, twitterCloneService_1) {
+    "use strict";
+    var Signup = (function () {
+        function Signup(service) {
+            this.service = service;
+        }
+        Signup.prototype.register = function (event) {
+            this.service.register(this.email, this.password, this.firstName, this.lastName, this.description);
+        };
+        Signup.prototype.attached = function () {
+            runJquery();
+        };
+        Signup = __decorate([
+            aurelia_framework_1.autoinject(), 
+            __metadata('design:paramtypes', [twitterCloneService_1.default])
+        ], Signup);
+        return Signup;
+    }());
+    exports.Signup = Signup;
+});
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 define('viewmodels/settings/settings',["require", "exports", "aurelia-framework", "../../services/twitterCloneService"], function (require, exports, aurelia_framework_1, twitterCloneService_1) {
     "use strict";
     var Settings = (function () {
@@ -773,25 +803,30 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-define('viewmodels/signup/signup',["require", "exports", "aurelia-framework", "../../services/twitterCloneService"], function (require, exports, aurelia_framework_1, twitterCloneService_1) {
+define('viewmodels/tweets/tweets',["require", "exports", "aurelia-framework", "../../services/twitterCloneService", "aurelia-event-aggregator", "../../services/messages"], function (require, exports, aurelia_framework_1, twitterCloneService_1, aurelia_event_aggregator_1, messages_1) {
     "use strict";
-    var Signup = (function () {
-        function Signup(service) {
+    var Tweets = (function () {
+        function Tweets(service, ea) {
+            var _this = this;
             this.service = service;
+            ea.subscribe(messages_1.TweetsChanged, function (message) {
+                _this.tweets = message.tweets;
+            });
+            this.tweets = service.tweets;
+            this.service.reloadTweets();
+            this.currentUser = this.service.currentUser;
         }
-        Signup.prototype.register = function (event) {
-            this.service.register(this.email, this.password, this.firstName, this.lastName, this.description);
-        };
-        Signup.prototype.attached = function () {
+        Tweets.prototype.attached = function () {
+            this.currentUser = this.service.currentUser;
             runJquery();
         };
-        Signup = __decorate([
+        Tweets = __decorate([
             aurelia_framework_1.autoinject(), 
-            __metadata('design:paramtypes', [twitterCloneService_1.default])
-        ], Signup);
-        return Signup;
+            __metadata('design:paramtypes', [twitterCloneService_1.default, aurelia_event_aggregator_1.EventAggregator])
+        ], Tweets);
+        return Tweets;
     }());
-    exports.Signup = Signup;
+    exports.Tweets = Tweets;
 });
 
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -840,41 +875,6 @@ define('viewmodels/tweetCard/tweetCard',["require", "exports", "aurelia-framewor
         return TweetCard;
     }());
     exports.TweetCard = TweetCard;
-});
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-define('viewmodels/tweets/tweets',["require", "exports", "aurelia-framework", "../../services/twitterCloneService", "aurelia-event-aggregator", "../../services/messages"], function (require, exports, aurelia_framework_1, twitterCloneService_1, aurelia_event_aggregator_1, messages_1) {
-    "use strict";
-    var Tweets = (function () {
-        function Tweets(service, ea) {
-            var _this = this;
-            this.service = service;
-            ea.subscribe(messages_1.TweetsChanged, function (message) {
-                _this.tweets = message.tweets;
-            });
-            this.tweets = service.tweets;
-            this.service.reloadTweets();
-            this.currentUser = this.service.currentUser;
-        }
-        Tweets.prototype.attached = function () {
-            this.currentUser = this.service.currentUser;
-            runJquery();
-        };
-        Tweets = __decorate([
-            aurelia_framework_1.autoinject(), 
-            __metadata('design:paramtypes', [twitterCloneService_1.default, aurelia_event_aggregator_1.EventAggregator])
-        ], Tweets);
-        return Tweets;
-    }());
-    exports.Tweets = Tweets;
 });
 
 define('querystring/decode',['require','exports','module'],function (require, exports, module) {// Copyright Joyent, Inc. and other Node contributors.
@@ -1029,7 +1029,7 @@ module.exports = function(obj, sep, eq, name) {
 
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\n  <compose view-model=\"./viewmodels/headerMenu/headerMenu\"></compose>\n\n  <section class=\"ui container\" id=\"main-content\">\n    <router-view></router-view>\n  </section>\n\n  <compose view=\"./viewmodels/footerMenu/footerMenu.html\"></compose>\n</template>\n"; });
 define('text!viewmodels/createTweet/createTweet.html', ['module'], function(module) { module.exports = "<template>\n  <section class=\"ui raised segment fill\">\n    <form submit.delegate=\"tweet()\" class=\"ui form\">\n      <h3 class=\"ui dividing header\">Share your mind with the world!</h3>\n      <div class=\"field\">\n        <label>Message (max. 140 Characters)</label>\n        <input placeholder=\"Message\" value.bind=\"message\" type=\"text\" name=\"message\">\n      </div>\n      <div class=\"field\">\n        <label>Image (optional)</label>\n        <input type=\"file\" name=\"image\" files.bind=\"files\">\n      </div>\n      <button class=\"ui blue submit button\">Post</button>\n    </form>\n  </section>\n</template>\n"; });
-define('text!viewmodels/headerMenu/headerMenu.html', ['module'], function(module) { module.exports = "<template>\n  <header class=\"ui fixed menu above\">\n    <menu class=\"ui container\">\n      <a class=\"header item\" route-href=\"route: tweets\">\n        <img class=\"logo\" src=\"/images/parrot.svg\"/>\n        True Parrot\n      </a>\n      <a class=\"header item\" route-href=\"route: tweet\" show.bind=\"loggedIn\">\n        Tweet\n      </a>\n\n      <a class=\"header item\" href=\"/admin/dashboard\" show.bind=\"loggedIn && currentUser.isAdmin\">\n        Admin Dashboard\n      </a>\n\n      <div class=\"right menu\">\n        <!-- Logged in navigation -->\n        <div class=\"ui dropdown item\" show.bind=\"loggedIn\">\n          <a route-href=\"route: profile;\n                         params.bind: {id: currentUser.id}\">\n            <img class=\"ui avatar image\" src=\"${currentUser.gravatar}\"/>\n            ${currentUser.fullName}\n          </a>\n          <i class=\"ui dropdown icon\"></i>\n\n          <div class=\"menu\">\n            <a class=\"item\" route-href=\"route: profile;\n                                        params.bind: {id: currentUser.id}\">\n              Profile\n            </a>\n            <a class=\"item\" route-href=\"route: settings\">Settings</a>\n            <div class=\"divider\"></div>\n            <a class=\"item\" route-href=\"route: logout\">Logout</a>\n          </div>\n        </div>\n\n        <!-- Not logged in navigation -->\n        <a class=\"item\" route-href=\"route: login\" show.bind=\"!loggedIn\">\n          Log-in\n        </a>\n        <a class=\"item\" route-href=\"route: signup\" show.bind=\"!loggedIn\">\n          Sign up\n        </a>\n      </div>\n    </menu>\n  </header>\n</template>\n"; });
+define('text!viewmodels/headerMenu/headerMenu.html', ['module'], function(module) { module.exports = "<template>\n  <header class=\"ui fixed menu above\">\n    <menu class=\"ui container\">\n      <a class=\"header item\" route-href=\"route: tweets\">\n        <img class=\"logo\" src=\"./images/parrot.svg\"/>\n        True Parrot\n      </a>\n      <a class=\"header item\" route-href=\"route: tweet\" show.bind=\"loggedIn\">\n        Tweet\n      </a>\n\n      <a class=\"header item\" href=\"/admin/dashboard\" show.bind=\"loggedIn && currentUser.isAdmin\">\n        Admin Dashboard\n      </a>\n\n      <div class=\"right menu\">\n        <!-- Logged in navigation -->\n        <div class=\"ui dropdown item\" show.bind=\"loggedIn\">\n          <a route-href=\"route: profile;\n                         params.bind: {id: currentUser.id}\">\n            <img class=\"ui avatar image\" src=\"${currentUser.gravatar}\"/>\n            ${currentUser.fullName}\n          </a>\n          <i class=\"ui dropdown icon\"></i>\n\n          <div class=\"menu\">\n            <a class=\"item\" route-href=\"route: profile;\n                                        params.bind: {id: currentUser.id}\">\n              Profile\n            </a>\n            <a class=\"item\" route-href=\"route: settings\">Settings</a>\n            <div class=\"divider\"></div>\n            <a class=\"item\" route-href=\"route: logout\">Logout</a>\n          </div>\n        </div>\n\n        <!-- Not logged in navigation -->\n        <a class=\"item\" route-href=\"route: login\" show.bind=\"!loggedIn\">\n          Log-in\n        </a>\n        <a class=\"item\" route-href=\"route: signup\" show.bind=\"!loggedIn\">\n          Sign up\n        </a>\n      </div>\n    </menu>\n  </header>\n</template>\n"; });
 define('text!viewmodels/footerMenu/footerMenu.html', ['module'], function(module) { module.exports = "<template>\n  <footer class=\"ui inverted vertical footer segment\">\n    <menu class=\"ui container\">\n      <div class=\"ui inverted stackable divided grid\">\n        <div class=\"eight wide column\">\n          <h4 class=\"ui inverted header\">Copyright</h4>\n          <div class=\"ui inverted link list\">\n            <p class=\"item\">Author: Florian Fritz</p>\n            <p class=\"item\">License: MIT</p>\n            <p class=\"item\">\n              Source:\n              <a href=\"https://github.com/FritzFlorian/true-parrot/\">https://github.com/FritzFlorian/true-parrot-spa</a>\n            </p>\n          </div>\n        </div>\n        <div class=\"eight wide column\">\n          <h4 class=\"ui inverted header\">Mentions/References</h4>\n          <div class=\"ui inverted link list\">\n            <p class=\"item\">\n              Most images, logos, designs and technical effects are open source resources from other people.\n              Please see the <a href=\"https://github.com/FritzFlorian/true-parrot-spa\">Github Readme</a> for details.\n            </p>\n          </div>\n        </div>\n      </div>\n    </menu>\n  </footer>\n</template>\n"; });
 define('text!viewmodels/landing/landing.html', ['module'], function(module) { module.exports = "<template>\n  <div id=\"fullscreen-image\">\n  </div>\n\n  <div class=\"center-both landig-page\" style=\"z-index: 1;\">\n    <h1>True Parrot</h1>\n    <h2>Exchange news and status updates with people from all around the world!</h2>\n    <a route-href=\"route: signup\">\n      <button class=\"ui massive button\">Join Now!</button>\n    </a>\n    </br>\n    <a route-href=\"route: tweets\">...or read without login</a>\n  </div>\n</template>\n"; });
 define('text!viewmodels/login/login.html', ['module'], function(module) { module.exports = "<template>\n  <section class=\"ui raised segment fill\">\n    <form submit.delegate=\"login($event)\" class=\"ui form\">\n      <h3 class=\"ui dividing header\">Login</h3>\n      <div class=\"field\">\n        <label>Email</label>\n        <input placeholder=\"Email\" type=\"text\" name=\"email\" value.bind=\"email\">\n      </div>\n      <div class=\"field\">\n        <label>Password</label>\n        <input type=\"password\" name=\"password\" value.bind=\"password\" placeholder=\"Password\">\n      </div>\n      <button class=\"ui blue submit button\">Submit</button>\n    </form>\n  </section>\n</template>\n"; });
@@ -1037,6 +1037,6 @@ define('text!viewmodels/logout/logout.html', ['module'], function(module) { modu
 define('text!viewmodels/profile/profile.html', ['module'], function(module) { module.exports = "<template>\n  <section class=\"ui raised segment\">\n    <div class=\"ui stackable column grid\">\n      <div class=\"six wide column\">\n        <div class=\"ui sticky\" style=\"padding: 10px;\">\n          <div class=\"ui fluid card\">\n            <div class=\"image\">\n              <img src=\"${profile.user.bigGravatar}\">\n            </div>\n            <div class=\"content\">\n              <a class=\"header\" route-href=\"route: profile;\n                                    params.bind: {id: profile.user.id}\">${profile.user.fullName}</a>\n              <div class=\"meta\">\n                <span class=\"date\">Joined ${profile.user.createdAt}</span>\n              </div>\n              <div class=\"description\">\n                ${profile.user.description}\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"ten wide column\">\n        <div class=\"ui two column stackable grid\">\n          <div class=\"column\" repeat.for=\"tweet of profile.tweets\">\n            <compose view-model=\"../tweetCard/tweetCard\"\n                     model.bind=\"{ currentUser: currentUser, tweet: tweet}\"></compose>\n          </div>\n        </div>\n      </div>\n\n    </div>\n  </section>\n</template>\n"; });
 define('text!viewmodels/settings/settings.html', ['module'], function(module) { module.exports = "<template>\n  <section class=\"ui raised segment\">\n    <form submit.delegate=\"saveSettings($event)\" class=\"ui form\">\n      <h3 class=\"ui dividing header\">Register</h3>\n      <div class=\"field\">\n        <label>Name</label>\n        <div class=\"two fields\">\n          <div class=\"field\">\n            <input placeholder=\"First Name\" type=\"text\" name=\"firstName\" value.bind=\"firstName\">\n          </div>\n          <div class=\"field\">\n            <input placeholder=\"Last Name\" type=\"text\" name=\"lastName\" value.bind=\"lastName\">\n          </div>\n        </div>\n      </div>\n      <div class=\"field\">\n        <label>Email</label>\n        <input placeholder=\"Email\" type=\"text\" name=\"email\" value.bind=\"email\">\n      </div>\n      <div class=\"field\">\n        <label>Description</label>\n        <input placeholder=\"Short Profile Description\" type=\"text\" name=\"description\" value.bind=\"description\">\n      </div>\n      <div class=\"field\">\n        <label>Password</label>\n        <input type=\"password\" name=\"password\" placeholder=\"Password\" value.bind=\"password\">\n      </div>\n      <button class=\"ui blue submit button\">Submit</button>\n    </form>\n  </section>\n</template>\n"; });
 define('text!viewmodels/signup/signup.html', ['module'], function(module) { module.exports = "<template>\n  <section class=\"ui raised segment\">\n    <form submit.delegate=\"register($event)\" class=\"ui form\">\n      <h3 class=\"ui dividing header\">Register</h3>\n      <div class=\"field\">\n        <label>Name</label>\n        <div class=\"two fields\">\n          <div class=\"field\">\n            <input placeholder=\"First Name\" type=\"text\" name=\"firstName\" value.bind=\"firstName\">\n          </div>\n          <div class=\"field\">\n            <input placeholder=\"Last Name\" type=\"text\" name=\"lastName\" value.bind=\"lastName\">\n          </div>\n        </div>\n      </div>\n      <div class=\"field\">\n        <label>Email</label>\n        <input placeholder=\"Email\" type=\"text\" name=\"email\" value.bind=\"email\">\n      </div>\n      <div class=\"field\">\n        <label>Description</label>\n        <input placeholder=\"Short Profile Description\" type=\"text\" name=\"description\" value.bind=\"description\">\n      </div>\n      <div class=\"field\">\n        <label>Password</label>\n        <input type=\"password\" name=\"password\" placeholder=\"Password\" value.bind=\"password\">\n      </div>\n      <button class=\"ui blue submit button\">Submit</button>\n    </form>\n  </section>\n</template>\n"; });
+define('text!viewmodels/tweetCard/tweetCard.html', ['module'], function(module) { module.exports = "<template>\n  <div class=\"ui fluid card\">\n    <div class=\"content\">\n      <div class=\"right floated meta\">${tweet.createdAt}</div>\n      <a href=\"/users/{{creator._id}}\">\n        <img class=\"ui avatar image\" src=\"${tweet.creator.gravatar}\">\n        ${tweet.creator.fullName}\n      </a>\n    </div>\n    <div class=\"content\">\n      <p>${tweet.message}</p>\n    </div>\n    <div class=\"image\" show.bind=\"tweet.image\">\n      <img src=\"${tweet.image}\">\n    </div>\n    <div class=\"extra content\">\n      <a show.bind=\"tweet.canUserDeletePost\" click.delegate=\"delete($event)\">\n        <i class=\"big trash icon\"></i>\n        Delete\n      </a>\n\n      <a class=\"right floated\" click.delegate=\"unParrot($event)\" show.bind=\"tweet.hasParrotedTweet\">\n        <img class=\"ui icon image\" src=\"./images/parrot_round_highlight.svg\"/>\n\n        ${tweet.parroting.length} parroting\n      </a>\n      <a class=\"right floated\" click.delegate=\"parrot($event)\" show.bind=\"!tweet.hasParrotedTweet\"/>\n        <img class=\"ui icon image\" src=\"./images/parrot_round.svg\"/>\n\n        ${tweet.parroting.length} parroting\n      </a>\n    </div>\n  </div>\n</template>\n"; });
 define('text!viewmodels/tweets/tweets.html', ['module'], function(module) { module.exports = "<template>\n  <section class=\"ui raised segment\">\n    <div class=\"ui three column grid\">\n      <div class=\"column\" repeat.for=\"tweet of tweets\">\n        <compose view-model=\"../tweetCard/tweetCard\"\n                  model.bind=\"{ currentUser: currentUser, tweet: tweet}\"></compose>\n      </div>\n    </div>\n  </section>\n</template>\n"; });
-define('text!viewmodels/tweetCard/tweetCard.html', ['module'], function(module) { module.exports = "<template>\n  <div class=\"ui fluid card\">\n    <div class=\"content\">\n      <div class=\"right floated meta\">${tweet.createdAt}</div>\n      <a href=\"/users/{{creator._id}}\">\n        <img class=\"ui avatar image\" src=\"${tweet.creator.gravatar}\">\n        ${tweet.creator.fullName}\n      </a>\n    </div>\n    <div class=\"content\">\n      <p>${tweet.message}</p>\n    </div>\n    <div class=\"image\" show.bind=\"tweet.image\">\n      <img src=\"${tweet.image}\">\n    </div>\n    <div class=\"extra content\">\n      <a show.bind=\"tweet.canUserDeletePost\" click.delegate=\"delete($event)\">\n        <i class=\"big trash icon\"></i>\n        Delete\n      </a>\n\n      <a class=\"right floated\" click.delegate=\"unParrot($event)\" show.bind=\"tweet.hasParrotedTweet\">\n        <img class=\"ui icon image\" src=\"/images/parrot_round_highlight.svg\"/>\n\n        ${tweet.parroting.length} parroting\n      </a>\n      <a class=\"right floated\" click.delegate=\"parrot($event)\" show.bind=\"!tweet.hasParrotedTweet\"/>\n        <img class=\"ui icon image\" src=\"/images/parrot_round.svg\"/>\n\n        ${tweet.parroting.length} parroting\n      </a>\n    </div>\n  </div>\n</template>\n"; });
 //# sourceMappingURL=app-bundle.js.map
