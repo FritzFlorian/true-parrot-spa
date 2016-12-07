@@ -9,9 +9,12 @@
             <a href="/admin/tweets">Administrate Tweets</a>
           </div>
           <div class="ui segment">
-            {{#each tweets}}
-            {{> tweet }}
-            {{/each}}
+            <div class="ui one column grid">
+              <div class="column" repeat.for="tweet of tweets">
+                <compose view-model="../tweetCard/tweetCard"
+                         model.bind="{ currentUser: currentUser, tweet: tweet}"></compose>
+              </div>
+            </div>
           </div>
         </div>
       </div>
