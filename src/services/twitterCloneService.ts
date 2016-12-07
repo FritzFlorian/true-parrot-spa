@@ -1,7 +1,7 @@
 import User from "./user";
 import {autoinject} from "aurelia-framework";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {LoginStatus, TweetsChanged} from "./messages";
+import {LoginStatus, TweetsChanged, UsersChanged} from "./messages";
 import AsyncHttpClient from "./asyncHttpClient";
 import Tweet from "./tweet";
 import {Profile} from "./profile";
@@ -13,6 +13,7 @@ export default class TwitterCloneService {
   httpClient: AsyncHttpClient;
 
   tweets: Tweet[];
+  users: User[];
   currentProfileTweets: Tweet[];
 
   constructor(ea:EventAggregator, httpClient:AsyncHttpClient) {
@@ -21,8 +22,10 @@ export default class TwitterCloneService {
 
     this.currentUser = this.httpClient.getAuthenticatedUser();
     this.tweets = [];
+    this.users = [];
     this.currentProfileTweets = [];
     this.reloadTweets();
+    this.reloadUsers();
 
     ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
       this.currentUser = loginStatus.user;
@@ -97,7 +100,24 @@ export default class TwitterCloneService {
         this.ea.publish(new TweetsChanged(this.tweets));
       }
     });
+  }
 
+  /**
+   * Reload the global timeline of tweets from the server.
+   */
+  reloadUsers() {
+    this.httpClient.get("/api/users").then((response) => {
+      if (response.isSuccess) {
+        this.users = [];
+        for (let userJson of response.content) {
+          const newUser = User.fromJson(userJson);
+
+          this.users.push(newUser);
+        }
+
+        this.ea.publish(new UsersChanged(this.users));
+      }
+    });
   }
 
   /**

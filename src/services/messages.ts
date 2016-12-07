@@ -21,6 +21,14 @@ export class TweetsChanged {
   }
 }
 
+export class UsersChanged {
+  users: User[];
+
+  constructor(users:User[]) {
+    this.users = users;
+  }
+}
+
 export class FlashMessage {
   message: string;
   displayIn: number;
