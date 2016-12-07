@@ -96,7 +96,15 @@ export class App {
         nav: true,
         settings: { auth: true, admin: true},
         title: "Admin Dashboard"
-      }
+      },
+      {
+        route: "admin/tweets",
+        name: "adminTweets",
+        moduleId: "viewmodels/adminTweets/adminTweets",
+        nav: true,
+        settings: { auth: true, admin: true},
+        title: "Administrate Tweets"
+      },
     ]);
 
     this.router = router;
