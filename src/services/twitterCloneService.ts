@@ -1,7 +1,7 @@
 import User from "./user";
 import {autoinject} from "aurelia-framework";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {LoginStatus, TweetsChanged} from "./messages";
+import {LoginStatus, TweetsChanged, UsersChanged, AdminStatsChanged} from "./messages";
 import AsyncHttpClient from "./asyncHttpClient";
 import Tweet from "./tweet";
 import {Profile} from "./profile";
@@ -13,6 +13,8 @@ export default class TwitterCloneService {
   httpClient: AsyncHttpClient;
 
   tweets: Tweet[];
+  users: User[];
+  adminStats: any;
   currentProfileTweets: Tweet[];
 
   constructor(ea:EventAggregator, httpClient:AsyncHttpClient) {
@@ -21,10 +23,24 @@ export default class TwitterCloneService {
 
     this.currentUser = this.httpClient.getAuthenticatedUser();
     this.tweets = [];
+    this.users = [];
+    this.currentProfileTweets = [];
     this.reloadTweets();
+    this.reloadUsers();
 
     ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
       this.currentUser = loginStatus.user;
+    });
+
+    ea.subscribe(UsersChanged, (message:UsersChanged) => {
+      if (this.isAuthenticated() && this.currentUser.isAdmin) {
+        this.reloadAdminStats();
+      }
+    });
+    ea.subscribe(TweetsChanged, (message:TweetsChanged) => {
+      if (this.isAuthenticated() && this.currentUser.isAdmin) {
+        this.reloadAdminStats();
+      }
     });
   }
 
@@ -96,7 +112,24 @@ export default class TwitterCloneService {
         this.ea.publish(new TweetsChanged(this.tweets));
       }
     });
+  }
 
+  /**
+   * Reload the global timeline of tweets from the server.
+   */
+  reloadUsers() {
+    this.httpClient.get("/api/users").then((response) => {
+      if (response.isSuccess) {
+        this.users = [];
+        for (let userJson of response.content) {
+          const newUser = User.fromJson(userJson);
+
+          this.users.push(newUser);
+        }
+
+        this.ea.publish(new UsersChanged(this.users));
+      }
+    });
   }
 
   /**
@@ -240,6 +273,47 @@ export default class TwitterCloneService {
       this.ea.publish(new TweetsChanged(this.tweets));
 
       return newTweet;
+    }).catch((error) => {
+      throw new ServiceError(error);
+    });
+  }
+
+  /**
+   * Batch delete tweets using the admin interface
+   *
+   * @param tweetIds The tweet ids to delete
+   */
+  adminDeleteTweets(tweetIds:string[]) {
+    return this.httpClient.post("/api/admin/tweets/batchDelete", tweetIds).then((result) => {
+      this.reloadTweets();
+
+      return result.content.message;
+    }).catch((error) => {
+      throw new ServiceError(error);
+    });
+  }
+
+  /**
+   * Batch delete users using the admin interface
+   *
+   * @param userIds The tweet ids to delete
+   */
+  adminDeleteUsers(userIds:string[]) {
+    return this.httpClient.post("/api/admin/users/batchDelete", userIds).then((result) => {
+      this.reloadUsers();
+
+      return result.content.message;
+    }).catch((error) => {
+      throw new ServiceError(error);
+    });
+  }
+
+  reloadAdminStats() {
+    return this.httpClient.get("/api/admin/stats").then((result) => {
+      this.adminStats = result.content;
+      this.ea.publish(new AdminStatsChanged(this.adminStats));
+
+      return result.content;
     }).catch((error) => {
       throw new ServiceError(error);
     });

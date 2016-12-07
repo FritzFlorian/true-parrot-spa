@@ -1,8 +1,9 @@
 <template>
   <div class="ui fluid card">
     <div class="content">
-      <div class="right floated meta">${tweet.createdAt}</div>
-      <a href="/users/{{creator._id}}">
+      <div class="right floated meta">${tweet.timeAgo}</div>
+      <a route-href="route: profile;
+                     params.bind: {id: tweet.creator.id}">
         <img class="ui avatar image" src="${tweet.creator.gravatar}">
         ${tweet.creator.fullName}
       </a>

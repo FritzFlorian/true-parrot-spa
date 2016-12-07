@@ -1,0 +1,63 @@
+<template>
+  <section class="ui raised segment">
+    <h2>Administrate True Parrot</h2>
+    <div class="ui stackable centered column grid">
+      <div class="four wide column">
+        <div class="ui raised segments">
+          <div class="ui segment">
+            <h3>Latest Tweets</h3>
+            <a route-href="route: adminTweets">Administrate Tweets</a>
+          </div>
+          <div class="ui segment">
+            <div class="ui one column grid">
+              <div class="column" repeat.for="tweet of tweets">
+                <compose view-model="../tweetCard/tweetCard"
+                         model.bind="{ currentUser: currentUser, tweet: tweet}"></compose>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="four wide column">
+        <div class="ui raised segments">
+          <div class="ui segment">
+            <h3>Latest Users</h3>
+            <a route-href="route: adminUsers">Administrate Users</a>
+          </div>
+          <div class="ui segment">
+            <div class="ui one column grid">
+              <div class="column" repeat.for="user of users">
+                <div class="ui fluid card">
+                  <div class="image">
+                    <img src="${user.bigGravatar}">
+                  </div>
+                  <div class="content">
+                    <a class="header" route-href="route: profile;
+                                                  params.bind: {id: user.id}">${user.fullName}</a>
+                    <div class="meta">
+                      <span class="date">Joined ${user.timeAgo}</span>
+                    </div>
+                    <div class="description">
+                      ${user.description}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="eight wide column">
+        <div class="ui raised segments">
+          <div class="ui segment">
+            <h3>Stats</h3>
+          </div>
+          <div class="ui segment">
+            <p><strong>${stats.userCount}</strong> registered Users</p>
+            <p><strong>${stats.tweetCount}</strong> Tweets</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
