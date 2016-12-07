@@ -113,10 +113,11 @@ class AuthorizeStep {
 
   constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
+    this.ea = ea;
   }
 
   run(navigationInstruction, next) {
-    const isLoggedIn = this.service.isAuthenticated;
+    const isLoggedIn = this.service.isAuthenticated();
     const isAdmin = isLoggedIn && this.service.currentUser.isAdmin;
 
     if (navigationInstruction.getAllInstructions().some(i => i.config.settings.auth)) {
@@ -127,7 +128,7 @@ class AuthorizeStep {
     }
     if (navigationInstruction.getAllInstructions().some(i => i.config.settings.admin)) {
       if (!isAdmin) {
-        this.ea.publish(new FlashMessage("Insufficient permission to view this page."));
+        this.ea.publish(new FlashMessage("Insufficient permission to view the page."));
         return next.cancel(new Redirect("tweets"));
       }
     }
