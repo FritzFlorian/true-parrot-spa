@@ -1,7 +1,7 @@
 <template>
   <section class="ui raised segment">
     <h2>Administrate Tweets</h2>
-    <form class="ui form" action="/admin/tweets/delete" method="POST">
+    <form class="ui form" submit.delegate="deleteSelected()">
       <div class="fields">
         <table class="ui celled padded table">
           <thead>
@@ -23,7 +23,7 @@
               <td>
                 <div class="inline field">
                   <div class="ui checkbox">
-                    <input type="checkbox" class="hidden" value="{{_id}}" name="selectedTweets[]">
+                    <input type="checkbox" class="hidden" value.bind="tweet.id" checked.bind="selectedTweets">
                   </div>
                 </div>
               </td>

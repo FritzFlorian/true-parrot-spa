@@ -11,6 +11,8 @@ export class AdminDashboard {
   tweets: Tweet[];
   currentUser: User;
 
+  selectedTweets: any[] = [];
+
   constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
     this.currentUser = service.currentUser;
@@ -22,11 +24,14 @@ export class AdminDashboard {
     this.service.reloadTweets();
   }
 
-
   attached() {
     this.tweets = this.service.tweets;
 
     runJquery();
+  }
+
+  deleteSelected() {
+    console.log(this.selectedTweets);
   }
 
 }
