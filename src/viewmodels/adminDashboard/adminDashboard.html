@@ -53,26 +53,8 @@
             <h3>Stats</h3>
           </div>
           <div class="ui segment">
-            <p><strong>{{userCount}}</strong> registered Users</p>
-            <p><strong>{{tweetCount}}</strong> Tweets</p>
-          </div>
-          <div class="ui segment">
-            <canvas id="tweet-chart"></canvas>
-            <script>
-              var ctx = $("#tweet-chart");
-              var myChart = new Chart(ctx, {
-                type: 'bar',
-                options: {
-                  scales: {
-                    yAxes: [{
-                      ticks: {
-                        beginAtZero: true,
-                      },
-                    }],
-                  },
-                },
-              });
-            </script>
+            <p><strong>${stats.userCount}</strong> registered Users</p>
+            <p><strong>${stats.tweetCount}</strong> Tweets</p>
           </div>
         </div>
       </div>

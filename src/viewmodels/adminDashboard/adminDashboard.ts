@@ -2,7 +2,7 @@ import Tweet from "../../services/tweet";
 import {autoinject} from "aurelia-framework";
 import TwitterCloneService from "../../services/twitterCloneService";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {TweetsChanged, UsersChanged} from "../../services/messages";
+import {TweetsChanged, UsersChanged, AdminStatsChanged} from "../../services/messages";
 import User from "../../services/user";
 
 @autoinject()
@@ -11,6 +11,7 @@ export class AdminDashboard {
   tweets: Tweet[];
   users: User[];
   currentUser: User;
+  stats: any;
 
   constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
@@ -27,6 +28,12 @@ export class AdminDashboard {
     });
     this.users = this.service.users;
     this.service.reloadUsers();
+
+    ea.subscribe(AdminStatsChanged, (message:AdminStatsChanged) => {
+      this.stats = message.stats;
+    });
+    this.stats = this.service.adminStats;
+    this.service.reloadAdminStats();
   }
 
   setTweets(tweets:Tweet[]) {
@@ -39,6 +46,8 @@ export class AdminDashboard {
 
   attached() {
     this.setTweets(this.service.tweets);
+    this.setUsers(this.service.users);
+    this.stats = this.service.adminStats;
 
     runJquery();
   }

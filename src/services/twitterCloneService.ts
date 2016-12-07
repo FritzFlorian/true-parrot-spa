@@ -1,7 +1,7 @@
 import User from "./user";
 import {autoinject} from "aurelia-framework";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {LoginStatus, TweetsChanged, UsersChanged} from "./messages";
+import {LoginStatus, TweetsChanged, UsersChanged, AdminStatsChanged} from "./messages";
 import AsyncHttpClient from "./asyncHttpClient";
 import Tweet from "./tweet";
 import {Profile} from "./profile";
@@ -14,6 +14,7 @@ export default class TwitterCloneService {
 
   tweets: Tweet[];
   users: User[];
+  adminStats: any;
   currentProfileTweets: Tweet[];
 
   constructor(ea:EventAggregator, httpClient:AsyncHttpClient) {
@@ -29,6 +30,17 @@ export default class TwitterCloneService {
 
     ea.subscribe(LoginStatus, (loginStatus:LoginStatus) => {
       this.currentUser = loginStatus.user;
+    });
+
+    ea.subscribe(UsersChanged, (message:UsersChanged) => {
+      if (this.isAuthenticated() && this.currentUser.isAdmin) {
+        this.reloadAdminStats();
+      }
+    });
+    ea.subscribe(TweetsChanged, (message:TweetsChanged) => {
+      if (this.isAuthenticated() && this.currentUser.isAdmin) {
+        this.reloadAdminStats();
+      }
     });
   }
 
@@ -277,7 +289,7 @@ export default class TwitterCloneService {
 
       return result.content.message;
     }).catch((error) => {
-      return new ServiceError(error);
+      throw new ServiceError(error);
     });
   }
 
@@ -292,7 +304,18 @@ export default class TwitterCloneService {
 
       return result.content.message;
     }).catch((error) => {
-      return new ServiceError(error);
+      throw new ServiceError(error);
+    });
+  }
+
+  reloadAdminStats() {
+    return this.httpClient.get("/api/admin/stats").then((result) => {
+      this.adminStats = result.content;
+      this.ea.publish(new AdminStatsChanged(this.adminStats));
+
+      return result.content;
+    }).catch((error) => {
+      throw new ServiceError(error);
     });
   }
 }

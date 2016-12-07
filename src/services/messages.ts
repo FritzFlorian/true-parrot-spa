@@ -21,6 +21,14 @@ export class TweetsChanged {
   }
 }
 
+export class AdminStatsChanged {
+  stats: any;
+
+  constructor(stats:any) {
+    this.stats = stats;
+  }
+}
+
 export class UsersChanged {
   users: User[];
 
