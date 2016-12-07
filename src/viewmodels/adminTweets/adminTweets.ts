@@ -2,12 +2,13 @@ import Tweet from "../../services/tweet";
 import {autoinject} from "aurelia-framework";
 import TwitterCloneService from "../../services/twitterCloneService";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {TweetsChanged, UsersChanged} from "../../services/messages";
+import {TweetsChanged, UsersChanged, FlashMessage} from "../../services/messages";
 import User from "../../services/user";
 
 @autoinject()
 export class AdminDashboard {
   service: TwitterCloneService;
+  ea: EventAggregator;
   tweets: Tweet[];
   currentUser: User;
 
@@ -15,6 +16,7 @@ export class AdminDashboard {
 
   constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
+    this.ea = ea;
     this.currentUser = service.currentUser;
 
     ea.subscribe(TweetsChanged, (message:TweetsChanged) => {
@@ -31,7 +33,9 @@ export class AdminDashboard {
   }
 
   deleteSelected() {
-    console.log(this.selectedTweets);
+    this.service.adminDeleteTweets(this.selectedTweets).then((message) => {
+      this.ea.publish(new FlashMessage(message).displayNow());
+    });
   }
 
 }

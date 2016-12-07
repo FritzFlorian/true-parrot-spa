@@ -265,6 +265,22 @@ export default class TwitterCloneService {
       throw new ServiceError(error);
     });
   }
+
+  /**
+   * Batch delete tweets using the admin interface
+   *
+   * @param tweetIds The tweet ids to delete
+   */
+  adminDeleteTweets(tweetIds:string[]) {
+    return this.httpClient.post("/api/admin/tweets/batchDelete", tweetIds).then((result) => {
+      this.reloadTweets();
+      console.log(result);
+
+      return result.content.message;
+    }).catch((error) => {
+      return new ServiceError(error);
+    });
+  }
 }
 
 export class ServiceError extends Error {
