@@ -274,7 +274,21 @@ export default class TwitterCloneService {
   adminDeleteTweets(tweetIds:string[]) {
     return this.httpClient.post("/api/admin/tweets/batchDelete", tweetIds).then((result) => {
       this.reloadTweets();
-      console.log(result);
+
+      return result.content.message;
+    }).catch((error) => {
+      return new ServiceError(error);
+    });
+  }
+
+  /**
+   * Batch delete users using the admin interface
+   *
+   * @param userIds The tweet ids to delete
+   */
+  adminDeleteUsers(userIds:string[]) {
+    return this.httpClient.post("/api/admin/users/batchDelete", userIds).then((result) => {
+      this.reloadUsers();
 
       return result.content.message;
     }).catch((error) => {

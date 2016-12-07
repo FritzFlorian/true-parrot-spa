@@ -1,0 +1,39 @@
+<template>
+  <section class="ui raised segment">
+    <h2>Administrate Users</h2>
+    <form class="ui form" submit.delegate="deleteSelected()">
+      <div class="fields">
+        <table class="ui celled padded table">
+          <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Description</th>
+            <th>
+              <button class="ui negative button" type="submit">Delete Selected</button>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+
+            <tr repeat.for="user of users">
+              <td>${user.firstName}</td>
+              <td>${user.lastName}</td>
+              <td>${user.email}</td>
+              <td>${user.description}</td>
+              <td>
+                <div class="inline field">
+                  <div class="ui checkbox">
+                    <input type="checkbox" class="hidden" value.bind="user.id" checked.bind="selectedUsers">
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </section>
+</template>
