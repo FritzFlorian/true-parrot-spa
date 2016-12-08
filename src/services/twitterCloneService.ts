@@ -263,6 +263,8 @@ export default class TwitterCloneService {
         }
 
         this.ea.publish(new UsersChanged(this.users));
+
+        return this.users;
       });
     });
   }
