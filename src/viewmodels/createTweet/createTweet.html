@@ -14,5 +14,9 @@
     </form>
 
     <compose view="../formErrors/formErrors.html"></compose>
+
+    <div class="ui dimmer" class.bind="loading ? 'active' : ''">
+      <div class="ui loader"></div>
+    </div>
   </section>
 </template>

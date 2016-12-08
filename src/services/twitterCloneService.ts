@@ -4,7 +4,6 @@ import {EventAggregator} from "aurelia-event-aggregator";
 import {LoginStatus, TweetsChanged, UsersChanged, AdminStatsChanged} from "./messages";
 import AsyncHttpClient from "./asyncHttpClient";
 import Tweet from "./tweet";
-import {Profile} from "./profile";
 
 @autoinject()
 export default class TwitterCloneService {
@@ -156,6 +155,18 @@ export default class TwitterCloneService {
     });
   }
 
+  deleteTweetsByUser(userId) {
+    return this.httpClient.delete("/api/users/" + userId + "/tweets").then((result) => {
+      this.tweets = this.tweets.filter(existingTweet => existingTweet.creator.id != userId );
+      this.currentProfileTweets =
+        this.currentProfileTweets.filter(existingTweet => existingTweet.creator.id != userId );
+
+      this.ea.publish(new TweetsChanged(this.tweets));
+
+      return result.content.message;
+    });
+  }
+
   /**
    * Sets the 'parroting' status of an tweet for the current user.
    *
@@ -222,34 +233,51 @@ export default class TwitterCloneService {
    * @param userId
    * @returns Promise with the requested profile as a result
    */
+  getTweetsByUser(userId) {
+    const userUrl = "/api/users/" + userId;
+
+    return this.httpClient.get(userUrl + "/tweets").then((result) => {
+      const tweets = [];
+
+      for (let tweetJson of result.content) {
+        const newTweet = Tweet.fromJson(tweetJson);
+        newTweet.updateCurrentUser(this.currentUser);
+        tweets.push(newTweet);
+      }
+
+      this.currentProfileTweets = tweets;
+
+      return tweets;
+    });
+  }
+
+  /**
+   * Queries the server for a user.
+   *
+   * @param userId
+   * @returns Promise with the requested user.
+   */
   getUserProfile(userId) {
-    let profile = new Profile(null, null);
     const userUrl = "/api/users/" + userId;
 
     return this.httpClient.get(userUrl).then((result) => {
-      if (result.isSuccess) {
-        profile.user = User.fromJson(result.content);
+      return User.fromJson(result.content);
+    });
+  }
 
-        return this.httpClient.get(userUrl + "/tweets");
-      } else {
-        throw 'could not load profile';
-      }
-    }).then((result) => {
-      if (result.isSuccess) {
-        profile.tweets = [];
+  deleteUser(userId) {
+    const userUrl = "/api/users/" + userId;
 
-        for (let tweetJson of result.content) {
-          const newTweet = Tweet.fromJson(tweetJson);
-          newTweet.updateCurrentUser(this.currentUser);
-          profile.tweets.push(newTweet);
+    return this.httpClient.delete(userUrl).then((result) => {
+      this.users.forEach((existingUser, index) => {
+        if (existingUser.id == userId) {
+          this.users.splice(index, 1);
         }
 
-        this.currentProfileTweets = profile.tweets;
+        this.ea.publish(new UsersChanged(this.users));
 
-        return profile;
-      } else {
-        throw 'could not load profile';
-      }
+        return this.users;
+      });
     });
   }
 

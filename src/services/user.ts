@@ -41,6 +41,10 @@ export default class User {
     return false;
   }
 
+  canDeleteTweets(other:User) {
+    return this.id == other.id || this.isAdmin;
+  }
+
   get gravatar():string {
     return gravatar.url(this.email);
   }

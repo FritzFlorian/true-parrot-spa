@@ -27,21 +27,8 @@
           <div class="ui segment">
             <div class="ui one column grid">
               <div class="column" repeat.for="user of users">
-                <div class="ui fluid card">
-                  <div class="image">
-                    <img src="${user.bigGravatar}">
-                  </div>
-                  <div class="content">
-                    <a class="header" route-href="route: profile;
-                                                  params.bind: {id: user.id}">${user.fullName}</a>
-                    <div class="meta">
-                      <span class="date">Joined ${user.timeAgo}</span>
-                    </div>
-                    <div class="description">
-                      ${user.description}
-                    </div>
-                  </div>
-                </div>
+                <compose view-model="../userCard/userCard"
+                         model.bind="{ user: user }"></compose>
               </div>
             </div>
           </div>

@@ -1,0 +1,23 @@
+<template>
+  <div class="ui fluid card">
+    <div class="image">
+      <img src="${user.bigGravatar}">
+    </div>
+    <div class="content">
+      <a class="header" route-href="route: profile;
+                                    params.bind: {id: user.id}">${user.fullName}</a>
+      <div class="meta">
+        <span class="date">Joined ${user.timeAgo}</span>
+      </div>
+      <div class="description">
+        ${user.description}
+      </div>
+    </div>
+    <div class="extra content" show.bind="currentUser.isAdmin">
+      <button class="ui negative button" click.delegate="deleteUser()">Admin: Delete User</button>
+    </div>
+    <div class="extra content" show.bind="currentUser && currentUser.canDeleteTweets(user)">
+      <button class="ui negative button" click.delegate="deleteUserTweets()">Delete Users Tweets</button>
+    </div>
+  </div>
+</template>
