@@ -39,6 +39,8 @@ export class UserCard {
   }
 
   deleteUserTweets() {
-    console.log('delete tweets');
+    this.service.deleteTweetsByUser(this.user.id).then((message:string) => {
+      this.ea.publish(new FlashMessage(message).displayNow());
+    });
   }
 }

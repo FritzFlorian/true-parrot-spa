@@ -2,6 +2,8 @@ import {autoinject} from "aurelia-framework";
 import TwitterCloneService from "../../services/twitterCloneService";
 import Tweet from "../../services/tweet";
 import User from "../../services/user";
+import {EventAggregator} from "aurelia-event-aggregator";
+import {TweetsChanged} from "../../services/messages";
 
 @autoinject()
 export class Profile {
@@ -10,8 +12,12 @@ export class Profile {
   userId: string;
   currentUser: User;
 
-  constructor(service:TwitterCloneService) {
+  constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
+
+    ea.subscribe(TweetsChanged, (message:TweetsChanged) => {
+      this.tweets = this.service.currentProfileTweets;
+    });
   }
 
   activate(params) {

@@ -155,6 +155,18 @@ export default class TwitterCloneService {
     });
   }
 
+  deleteTweetsByUser(userId) {
+    return this.httpClient.delete("/api/users/" + userId + "/tweets").then((result) => {
+      this.tweets = this.tweets.filter(existingTweet => existingTweet.creator.id != userId );
+      this.currentProfileTweets =
+        this.currentProfileTweets.filter(existingTweet => existingTweet.creator.id != userId );
+
+      this.ea.publish(new TweetsChanged(this.tweets));
+
+      return result.content.message;
+    });
+  }
+
   /**
    * Sets the 'parroting' status of an tweet for the current user.
    *
