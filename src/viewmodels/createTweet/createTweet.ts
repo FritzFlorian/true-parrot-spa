@@ -14,6 +14,7 @@ export class Login {
   router: Router;
   formErrors: any[];
   ea: EventAggregator;
+  loading: boolean = false;
 
   constructor(service:TwitterCloneService, router:Router, ea:EventAggregator) {
     this.service = service;
@@ -23,6 +24,8 @@ export class Login {
   }
 
   tweet() {
+    this.loading = true;
+
     let image = null;
     if (this.files) {
       image = this.files[0];
@@ -31,8 +34,12 @@ export class Login {
     this.service.createTweet(this.message, image).then((result:Tweet) => {
       this.ea.publish(new FlashMessage("Tweet Created"));
       this.router.navigateToRoute('tweets');
+
+      this.loading = false;
     }).catch((error:ServiceError) => {
       this.formErrors = error.formErrors;
+
+      this.loading = false;
     });
   }
 
