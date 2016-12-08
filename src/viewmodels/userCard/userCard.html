@@ -13,5 +13,11 @@
         ${user.description}
       </div>
     </div>
+    <div class="extra content" show.bind="currentUser.isAdmin">
+      <button class="ui negative button" click.delegate="deleteUser()">Admin: Delete User</button>
+    </div>
+    <div class="extra content" show.bind="currentUser && currentUser.canDeleteTweets(user)">
+      <button class="ui negative button" click.delegate="deleteUserTweets()">Delete Users Tweets</button>
+    </div>
   </div>
 </template>

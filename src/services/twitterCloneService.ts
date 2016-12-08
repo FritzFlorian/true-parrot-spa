@@ -253,6 +253,20 @@ export default class TwitterCloneService {
     });
   }
 
+  deleteUser(userId) {
+    const userUrl = "/api/users/" + userId;
+
+    return this.httpClient.delete(userUrl).then((result) => {
+      this.users.forEach((existingUser, index) => {
+        if (existingUser.id == userId) {
+          this.users.splice(index, 1);
+        }
+
+        this.ea.publish(new UsersChanged(this.users));
+      });
+    });
+  }
+
   /**
    * Creates a new tweet for the current user.
    *

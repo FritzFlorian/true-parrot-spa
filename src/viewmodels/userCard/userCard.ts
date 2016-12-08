@@ -6,6 +6,7 @@ import User from "../../services/user";
 export class UserCard {
   service: TwitterCloneService;
   user: User;
+  currentUser: User;
 
   constructor(service:TwitterCloneService) {
     this.service = service;
@@ -19,5 +20,19 @@ export class UserCard {
         this.user = user;
       });
     }
+  }
+
+  attached() {
+    this.currentUser = this.service.currentUser;
+
+    runJquery();
+  }
+
+  deleteUser() {
+    this.service.deleteUser(this.user.id);
+  }
+
+  deleteUserTweets() {
+    console.log('delete tweets');
   }
 }

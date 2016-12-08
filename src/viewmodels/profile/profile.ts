@@ -1,12 +1,14 @@
 import {autoinject} from "aurelia-framework";
 import TwitterCloneService from "../../services/twitterCloneService";
 import Tweet from "../../services/tweet";
+import User from "../../services/user";
 
 @autoinject()
 export class Profile {
   service: TwitterCloneService;
   tweets: Tweet[];
   userId: string;
+  currentUser: User;
 
   constructor(service:TwitterCloneService) {
     this.service = service;
@@ -18,5 +20,9 @@ export class Profile {
     });
 
     this.userId = params.id;
+  }
+
+  attached() {
+    runJquery();
   }
 }
