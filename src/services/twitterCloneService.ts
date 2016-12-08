@@ -4,7 +4,6 @@ import {EventAggregator} from "aurelia-event-aggregator";
 import {LoginStatus, TweetsChanged, UsersChanged, AdminStatsChanged} from "./messages";
 import AsyncHttpClient from "./asyncHttpClient";
 import Tweet from "./tweet";
-import {Profile} from "./profile";
 
 @autoinject()
 export default class TwitterCloneService {
@@ -222,34 +221,35 @@ export default class TwitterCloneService {
    * @param userId
    * @returns Promise with the requested profile as a result
    */
+  getTweetsByUser(userId) {
+    const userUrl = "/api/users/" + userId;
+
+    return this.httpClient.get(userUrl + "/tweets").then((result) => {
+      const tweets = [];
+
+      for (let tweetJson of result.content) {
+        const newTweet = Tweet.fromJson(tweetJson);
+        newTweet.updateCurrentUser(this.currentUser);
+        tweets.push(newTweet);
+      }
+
+      this.currentProfileTweets = tweets;
+
+      return tweets;
+    });
+  }
+
+  /**
+   * Queries the server for a user.
+   *
+   * @param userId
+   * @returns Promise with the requested user.
+   */
   getUserProfile(userId) {
-    let profile = new Profile(null, null);
     const userUrl = "/api/users/" + userId;
 
     return this.httpClient.get(userUrl).then((result) => {
-      if (result.isSuccess) {
-        profile.user = User.fromJson(result.content);
-
-        return this.httpClient.get(userUrl + "/tweets");
-      } else {
-        throw 'could not load profile';
-      }
-    }).then((result) => {
-      if (result.isSuccess) {
-        profile.tweets = [];
-
-        for (let tweetJson of result.content) {
-          const newTweet = Tweet.fromJson(tweetJson);
-          newTweet.updateCurrentUser(this.currentUser);
-          profile.tweets.push(newTweet);
-        }
-
-        this.currentProfileTweets = profile.tweets;
-
-        return profile;
-      } else {
-        throw 'could not load profile';
-      }
+      return User.fromJson(result.content);
     });
   }
 

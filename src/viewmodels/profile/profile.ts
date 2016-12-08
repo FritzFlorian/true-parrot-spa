@@ -1,20 +1,22 @@
 import {autoinject} from "aurelia-framework";
 import TwitterCloneService from "../../services/twitterCloneService";
-import {Profile as ProfileModel} from "../../services/profile";
+import Tweet from "../../services/tweet";
 
 @autoinject()
 export class Profile {
   service: TwitterCloneService;
-  profile: ProfileModel;
+  tweets: Tweet[];
+  userId: string;
 
   constructor(service:TwitterCloneService) {
     this.service = service;
   }
 
   activate(params) {
-    this.service.getUserProfile(params.id).then((profile:ProfileModel) => {
-      this.profile = profile;
-      runJquery();
+    this.service.getTweetsByUser(params.id).then((serviceTweets:Tweet[]) => {
+      this.tweets = serviceTweets;
     });
+
+    this.userId = params.id;
   }
 }
