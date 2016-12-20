@@ -5,6 +5,7 @@ import {FlashMessage, PageChanged} from "../../services/messages";
 
 @autoinject()
 export class HeaderMessage {
+  maxFlashMessages = 2;
   router: Router;
   messages: FlashMessage[];
 
@@ -16,7 +17,7 @@ export class HeaderMessage {
       this.messages.unshift(message);
 
       // Delete too many, distracting messages
-      if (this.messages.length > 3) {
+      if (this.messages.length > this.maxFlashMessages) {
         this.messages.pop();
       }
     });
