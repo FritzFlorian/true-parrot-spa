@@ -5,7 +5,7 @@ You can access the app on github pages: https://fritzflorian.github.io/true-parr
 
 The SPA uses the api provided by this node project: https://github.com/FritzFlorian/true-parrot
 
-Please Note that this is ment as an introduction project to aurelia and nodejs.
+Please Note that this is meant as an introduction project to aurelia and nodejs.
 
 ## Attribution
 
