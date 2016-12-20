@@ -2,7 +2,7 @@ import {autoinject} from "aurelia-framework";
 import TwitterCloneService from "../../services/twitterCloneService";
 import User from "../../services/user";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {FlashMessage} from "../../services/messages";
+import {FlashMessage, UsersChanged} from "../../services/messages";
 
 @autoinject()
 export class UserCard {
@@ -14,21 +14,28 @@ export class UserCard {
   constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
     this.ea = ea;
+
+    ea.subscribe(UsersChanged, (message:UsersChanged) => {
+      this.reloadUserInfo(this.user.id);
+    });
+  }
+
+  reloadUserInfo(id) {
+    this.service.getUser(id).then((user) => {
+      this.user = user;
+      this.currentUser = this.service.currentUser;
+    });
   }
 
   activate(model) {
     this.user = model.user;
 
     if (model.userId) {
-      this.service.getUserProfile(model.userId).then((user) => {
-        this.user = user;
-      });
+      this.reloadUserInfo(model.userId);
     }
   }
 
   attached() {
-    this.currentUser = this.service.currentUser;
-
     runJquery();
   }
 
@@ -41,6 +48,18 @@ export class UserCard {
   deleteUserTweets() {
     this.service.deleteTweetsByUser(this.user.id).then((message:string) => {
       this.ea.publish(new FlashMessage(message).displayNow());
+    });
+  }
+
+  followUser() {
+    this.service.updateFollowUser(this.user.id, true).then((users) => {
+      this.ea.publish(new FlashMessage("Followed User").displayNow());
+    });
+  }
+
+  unfollowUser() {
+    this.service.updateFollowUser(this.user.id, false).then((users) => {
+      this.ea.publish(new FlashMessage("Stopped following User").displayNow());
     });
   }
 }

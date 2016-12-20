@@ -1,0 +1,10 @@
+<template>
+  <section class="ui raised segment">
+    <div class="ui three column grid">
+      <div class="column" repeat.for="tweet of tweets">
+        <compose view-model="../tweetCard/tweetCard"
+                  model.bind="{ currentUser: currentUser, tweet: tweet}"></compose>
+      </div>
+    </div>
+  </section>
+</template>

@@ -13,7 +13,20 @@
         ${user.description}
       </div>
     </div>
-    <div class="extra content" show.bind="currentUser.isAdmin">
+    <div class="extra content">
+      <a route-href="route: following;
+                     params.bind: {id: user.id}"><p>Follows ${user.following.length} Users.</p></a>
+      <a route-href="route: followers;
+                     params.bind: {id: user.id}"><p>Has ${user.followers.length} Followers.</p></a>
+    </div>
+    <div class="extra content" show.bind="currentUser && currentUser.canFollowUser(user)">
+      <button class="ui blue button" click.delegate="followUser()">Follow User</button>
+    </div>
+    <div class="extra content" show.bind="currentUser && currentUser.canUnfollowUser(user)">
+      <button class="ui button" click.delegate="unfollowUser()">Stop Following User</button>
+    </div>
+
+    <div class="extra content" show.bind="currentUser && currentUser.isAdmin">
       <button class="ui negative button" click.delegate="deleteUser()">Admin: Delete User</button>
     </div>
     <div class="extra content" show.bind="currentUser && currentUser.canDeleteTweets(user)">

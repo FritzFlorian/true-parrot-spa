@@ -66,6 +66,13 @@ export class App {
         title: "Tweets",
       },
       {
+        route: "personalFeed",
+        name: "personalFeed",
+        moduleId: "viewmodels/tweetsFollowing/tweetsFollowing",
+        nav: true,
+        title: "Personal Timeline",
+      },
+      {
         route: "settings",
         name: "settings",
         moduleId: "viewmodels/settings/settings",
@@ -80,6 +87,22 @@ export class App {
         moduleId: "viewmodels/profile/profile",
         nav: true,
         title: "Profile",
+      },
+      {
+        route: "profile/:id/followers",
+        href: "profile/:id/followers",
+        name: "followers",
+        moduleId: "viewmodels/followers/followers",
+        nav: true,
+        title: "Followers",
+      },
+      {
+        route: "profile/:id/following",
+        href: "profile/:id/following",
+        name: "following",
+        moduleId: "viewmodels/following/following",
+        nav: true,
+        title: "Following",
       },
       {
         route: "tweet",

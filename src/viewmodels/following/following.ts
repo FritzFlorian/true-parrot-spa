@@ -3,27 +3,32 @@ import TwitterCloneService from "../../services/twitterCloneService";
 import Tweet from "../../services/tweet";
 import User from "../../services/user";
 import {EventAggregator} from "aurelia-event-aggregator";
-import {TweetsChanged} from "../../services/messages";
+import {TweetsChanged, UsersChanged} from "../../services/messages";
 
 @autoinject()
-export class Profile {
+export class Following {
   service: TwitterCloneService;
-  tweets: Tweet[];
   userId: string;
+  user: User;
 
   constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
 
-    ea.subscribe(TweetsChanged, (message:TweetsChanged) => {
-      this.tweets = this.service.currentProfileTweets;
+    ea.subscribe(UsersChanged, (message:UsersChanged) => {
+      if (this.user) {
+        this.updateUser(this.user.id);
+      }
+    });
+  }
+
+  updateUser(id) {
+    this.service.getUser(id).then((user:User) => {
+      this.user = user;
     });
   }
 
   activate(params) {
-    this.service.getTweetsByUser(params.id).then((serviceTweets:Tweet[]) => {
-      this.tweets = serviceTweets;
-    });
-
+    this.updateUser(params.id);
     this.userId = params.id;
   }
 

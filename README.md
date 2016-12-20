@@ -1,7 +1,11 @@
 # True Parrot
 True Parrot is a small twitter like web app using node.js and hapi.
-This repo contains a single page app that uses the node api.
-The nade project can be found in this repo: https://github.com/FritzFlorian/true-parrot
+This repo contains a single page app implemented using the aurelia framework.
+You can access the app on github pages: https://fritzflorian.github.io/true-parrot-spa/
+
+The SPA uses the api provided by this node project: https://github.com/FritzFlorian/true-parrot
+
+Please Note that this is meant as an introduction project to aurelia and nodejs.
 
 ## Attribution
 
