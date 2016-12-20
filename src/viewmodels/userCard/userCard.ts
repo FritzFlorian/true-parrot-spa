@@ -21,7 +21,7 @@ export class UserCard {
   }
 
   reloadUserInfo(id) {
-    this.service.getUserProfile(id).then((user) => {
+    this.service.getUser(id).then((user) => {
       this.user = user;
       this.currentUser = this.service.currentUser;
     });

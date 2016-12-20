@@ -257,7 +257,7 @@ export default class TwitterCloneService {
    * @param userId
    * @returns Promise with the requested user.
    */
-  getUserProfile(userId) {
+  getUser(userId) {
     const userUrl = "/api/users/" + userId;
 
     return this.httpClient.get(userUrl).then((result) => {

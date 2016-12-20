@@ -1,0 +1,23 @@
+<template>
+  <section class="ui raised segment" visible.bind="profile">
+    <div class="ui stackable column grid">
+      <div class="six wide column">
+        <div class="ui sticky" style="padding: 10px;">
+          <compose view-model="../userCard/userCard"
+                   model.bind="{ userId: userId }"></compose>
+        </div>
+      </div>
+
+      <div class="ten wide column">
+        <div class="ui two column stackable grid">
+          <div class="column" repeat.for="follower of user.followers">
+            <h1>${follower.firstName}</h1>
+            <compose view-model="../userCard/userCard"
+                     model.bind="{ userId: follower }"></compose>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</template>
