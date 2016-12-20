@@ -23,6 +23,7 @@ export class UserCard {
   reloadUserInfo(id) {
     this.service.getUserProfile(id).then((user) => {
       this.user = user;
+      this.currentUser = this.service.currentUser;
     });
   }
 
@@ -35,8 +36,6 @@ export class UserCard {
   }
 
   attached() {
-    this.currentUser = this.service.currentUser;
-
     runJquery();
   }
 

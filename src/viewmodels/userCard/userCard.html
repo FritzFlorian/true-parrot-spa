@@ -24,7 +24,7 @@
       <button class="ui button" click.delegate="unfollowUser()">Stop Following User</button>
     </div>
 
-    <div class="extra content" show.bind="currentUser.isAdmin">
+    <div class="extra content" show.bind="currentUser && currentUser.isAdmin">
       <button class="ui negative button" click.delegate="deleteUser()">Admin: Delete User</button>
     </div>
     <div class="extra content" show.bind="currentUser && currentUser.canDeleteTweets(user)">

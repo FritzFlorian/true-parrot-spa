@@ -12,7 +12,7 @@
         <div class="ui two column stackable grid">
           <div class="column" repeat.for="tweet of tweets">
             <compose view-model="../tweetCard/tweetCard"
-                     model.bind="{ currentUser: currentUser, tweet: tweet}"></compose>
+                     model.bind="{ tweet: tweet}"></compose>
           </div>
         </div>
       </div>

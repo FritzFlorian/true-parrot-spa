@@ -10,7 +10,6 @@ export class Profile {
   service: TwitterCloneService;
   tweets: Tweet[];
   userId: string;
-  currentUser: User;
 
   constructor(service:TwitterCloneService, ea:EventAggregator) {
     this.service = service;
