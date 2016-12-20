@@ -17,6 +17,13 @@
       <a><p>Follows ${user.following.length} Users.</p></a>
       <a><p>Has ${user.followers.length} Followers.</p></a>
     </div>
+    <div class="extra content" show.bind="currentUser && currentUser.canFollowUser(user)">
+      <button class="ui blue button" click.delegate="deleteUserTweets()">Follow User</button>
+    </div>
+    <div class="extra content" show.bind="currentUser && currentUser.canUnfollowUser(user)">
+      <button class="ui button" click.delegate="deleteUserTweets()">Stop Following User</button>
+    </div>
+
     <div class="extra content" show.bind="currentUser.isAdmin">
       <button class="ui negative button" click.delegate="deleteUser()">Admin: Delete User</button>
     </div>

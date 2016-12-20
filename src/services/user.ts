@@ -28,7 +28,6 @@ export default class User {
   }
 
   static fromJson(json) {
-    console.log(json);
     return new User(json._id || json.id, json.firstName, json.lastName, json.email, json.createdAt,
                       json.description, json.scope, json.following, json.followers, json.token);
   }
@@ -48,6 +47,34 @@ export default class User {
 
   canDeleteTweets(other:User) {
     return this.id == other.id || this.isAdmin;
+  }
+
+  canFollowUser(other:User) {
+    if (this.id == other.id) {
+      return false;
+    }
+    for (let i = 0; i < other.followers.length; i++) {
+      let otherId = other.followers[i].id || other.followers[i];
+      if (otherId == this.id) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  canUnfollowUser(other:User) {
+    if (this.id == other.id) {
+      return false;
+    }
+    for (let i = 0; i < other.followers.length; i++) {
+      let otherId = other.followers[i].id || other.followers[i];
+      if (otherId == this.id) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   get gravatar():string {
