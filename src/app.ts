@@ -66,6 +66,13 @@ export class App {
         title: "Tweets",
       },
       {
+        route: "personalFeed",
+        name: "personalFeed",
+        moduleId: "viewmodels/tweetsFollowing/tweetsFollowing",
+        nav: true,
+        title: "Personal Timeline",
+      },
+      {
         route: "settings",
         name: "settings",
         moduleId: "viewmodels/settings/settings",

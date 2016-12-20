@@ -97,8 +97,13 @@ export default class TwitterCloneService {
   /**
    * Reload the global timeline of tweets from the server.
    */
-  reloadTweets() {
-    this.httpClient.get("/api/tweets").then((response) => {
+  reloadTweets(onlyFollowing = false) {
+    let url = "/api/tweets";
+    if (onlyFollowing) {
+      url = "/api/following/tweets";
+    }
+
+    this.httpClient.get(url).then((response) => {
       if (response.isSuccess) {
         this.tweets = [];
         for (let tweetJson of response.content) {
