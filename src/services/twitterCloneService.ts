@@ -265,6 +265,11 @@ export default class TwitterCloneService {
     });
   }
 
+  /**
+   * Deletes the user with the given id
+   * @param userId The id of the user to be deleted
+   * @returns {Promise<User[]>} A promise holding the new, changed user list
+   */
   deleteUser(userId) {
     const userUrl = "/api/users/" + userId;
 
@@ -278,6 +283,23 @@ export default class TwitterCloneService {
       });
 
       return this.users;
+    });
+  }
+
+  /**
+   * Follow or unfollow a given user.
+   *
+   * @param userId the user to follow/unfollow
+   * @param following wether to follow or unfollow the user
+   * @returns {any} A promise with the updated user list
+   */
+  updateFollowUser(userId, following) {
+    const followUrl = "/api/users/" + userId + "/follow";
+
+    return this.httpClient.patch(followUrl, { following: following }).then((result) => {
+      return this.reloadUsers();
+    }).catch((error) => {
+      return new ServiceError(error);
     });
   }
 
