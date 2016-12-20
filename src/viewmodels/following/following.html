@@ -9,11 +9,12 @@
       </div>
 
       <div class="ten wide column">
-        <h2>Tweets</h2>
+        <h2>Following</h2>
         <div class="ui two column stackable grid">
-          <div class="column" repeat.for="tweet of tweets">
-            <compose view-model="../tweetCard/tweetCard"
-                     model.bind="{ tweet: tweet}"></compose>
+          <div class="column" repeat.for="user of user.following">
+            <h1>${follower.firstName}</h1>
+            <compose view-model="../userCard/userCard"
+                     model.bind="{ userId: user }"></compose>
           </div>
         </div>
       </div>

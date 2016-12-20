@@ -90,6 +90,14 @@ export class App {
         title: "Followers",
       },
       {
+        route: "profile/:id/following",
+        href: "profile/:id/following",
+        name: "following",
+        moduleId: "viewmodels/following/following",
+        nav: true,
+        title: "Following",
+      },
+      {
         route: "tweet",
         name: "tweet",
         moduleId: "viewmodels/createTweet/createTweet",

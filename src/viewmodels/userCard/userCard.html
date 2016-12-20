@@ -14,8 +14,10 @@
       </div>
     </div>
     <div class="extra content">
-      <a><p>Follows ${user.following.length} Users.</p></a>
-      <a><p>Has ${user.followers.length} Followers.</p></a>
+      <a route-href="route: following;
+                     params.bind: {id: user.id}"><p>Follows ${user.following.length} Users.</p></a>
+      <a route-href="route: followers;
+                     params.bind: {id: user.id}"><p>Has ${user.followers.length} Followers.</p></a>
     </div>
     <div class="extra content" show.bind="currentUser && currentUser.canFollowUser(user)">
       <button class="ui blue button" click.delegate="followUser()">Follow User</button>
