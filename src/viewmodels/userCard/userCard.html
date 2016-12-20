@@ -13,6 +13,10 @@
         ${user.description}
       </div>
     </div>
+    <div class="extra content">
+      <a><p>Follows ${user.following.length} Users.</p></a>
+      <a><p>Has ${user.followers.length} Followers.</p></a>
+    </div>
     <div class="extra content" show.bind="currentUser.isAdmin">
       <button class="ui negative button" click.delegate="deleteUser()">Admin: Delete User</button>
     </div>

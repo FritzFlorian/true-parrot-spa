@@ -10,9 +10,11 @@ export default class User {
   scope: string[];
   token: string;
   description: string;
+  followers: any[];
+  following: any[];
 
-  constructor(id:string, firstName:string, lastName:string, email:string, createdAt:Date,
-                description:string = "", scope:string[] = [], token:string = "") {
+  constructor(id:string, firstName:string, lastName:string, email:string, createdAt:Date, description:string = "",
+                  scope:string[] = [], following:any[] = [], followers:any[] = [], token:string = "") {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -21,11 +23,14 @@ export default class User {
     this.token = token;
     this.description = description;
     this.createdAt = createdAt;
+    this.followers = followers;
+    this.following = following;
   }
 
   static fromJson(json) {
-    return new User(json._id || json.id, json.firstName, json.lastName, json.email,
-                    json.createdAt, json.description, json.scope, json.token);
+    console.log(json);
+    return new User(json._id || json.id, json.firstName, json.lastName, json.email, json.createdAt,
+                      json.description, json.scope, json.following, json.followers, json.token);
   }
 
   get fullName():string {
